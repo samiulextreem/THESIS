@@ -1,0 +1,40 @@
+he arm operates with a servo gear reduction ratio of
+30:1, a choice validated by the design’s final verdict as sufficient to handle the
+required torques while maintaining energy efficiency, critical for prolonged
+field operations. Each joint is powered by NEMA 17 motors, selected for
+their compact size and robust performance, delivering a rated torque of .4 Nm
+with gear reduction , the value stand for 12 Nm, which exceeds the calculated
+maximum torque of 3.36 Nm in the arm’s fully stretched position, even after
+applying a 30% safety margin to account for the payload, finger tip, and link
+weights in worst case scenario. This is 7.26 times more than calculated max
+torque required for this applicaiton. The arm features three rotational joints
+(R1, R2, R3), with R1 at the base (root revolution) experiencing a torque of
+T1 = 2.8 Nm, and R2 bearing a torque of T2 = .8 Nm due to the cumulative
+forces from the arm’s extension.
+
+
+
+To calcuate the torque, at first we calculate the force at joints –fully stretched–
+yield forces atas follows, F2 = .5 Kg(mass of the stepper motor+ mass of
+gearbox ) × 9.8 = 4.5 N and F3 = .3 kg (mass of stepper motor) × 9.8
+= 2.98 N), resulting in gravitational force of 4.5 N and 2.98 N at R2 and
+R3, respectively. And from this force value we can estimate the torque value
+required for the motor to rotate. The arm’s weight distribution is optimized
+for field mobility: the total weight at joint R2 is 0.46 kg (comprising the 0.3
+kg NEMA 17 motor and 0.16 kg of additional components), while R3 weighs
+0.3 kg, and the finger tip at the end effector has a maximum weight of 15 g
+to ensure minimal load at the arm’s extremity. Lightweight materials such as
+wood or aluminum should be chosen for the links, balancing durability with
+the need to reduce energy consumption, as heavier materials would strain the
+motors and battery life in uneven asparagus fields.
+
+
+The training dataset comprises 150 annotated images of asparagus fields cap-
+tured under diverse conditions, such as varying lighting, weather, and weed
+density. Each image includes labeled bounding boxes and segmentation masks
+for asparagus spears, prepared in the COCO format to ensure compatibility
+with the framework. Initial evaluation is conducted via field tests rather than
+a predefined test dataset.
+The model runs on a CUDA.raining parameters include a batch size of 2, a learning rate of 0.00025, and
+300 iterations—sufficient for initial fine-tuning. The learning rate remains
+constant during training to maintain stability.

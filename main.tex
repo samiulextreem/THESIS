@@ -1,0 +1,105 @@
+% Template by Matteo Russo, 11/03/2024
+
+% --------------------------
+% ---- DECLARE PACKAGES ----
+% --------------------------
+\documentclass[a4paper, oneside, openright]{book}
+\usepackage[T1]{fontenc} % Font encoding, T1 = it
+\usepackage{lmodern}
+\usepackage[final]{microtype} % Better line breaking, reduces overfull hboxes
+\usepackage{multicol} % Used in title page
+\usepackage[utf8]{inputenc} % Input encoding
+\usepackage[english]{babel} % English as main language
+\usepackage{blindtext}
+\usepackage{graphicx}
+\usepackage[a4paper,top=2.5cm,bottom=2.5cm,left=3cm,right=3cm]{geometry} % Page layout
+\usepackage[fontsize=13pt]{scrextend} % Font size
+% \usepackage{graphicx} % duplicate removed
+\usepackage[parfill]{parskip} % Disable indent on paragraph skip
+% \usepackage[hang,flushmargin]{footmisc} % Disable indent in footnotes
+\usepackage{titlesec}
+\usepackage{minted} % Used for code
+\usepackage{float}
+\usepackage[font=scriptsize, skip=5pt, justification=centering]{caption} % Caption/image space
+\usepackage[style=authoryear-ibid,backend=biber]{biblatex}
+\usepackage[immediate]{silence}
+\WarningFilter[temp]{latex}{Command} % silence the warning
+\usepackage{sectsty}
+\DeactivateWarningFilters[temp] % So nothing unrelated gets silenced
+\usepackage{hyperref} % Clickable index
+% \usepackage[justification=centering]{caption} % duplicate removed; options merged above
+\usepackage{csquotes} % Babel dependency
+\usepackage[bottom]{footmisc} % Footnotes positioning
+
+% ------------------------
+% ---- DOCUMENT SETUP ----
+% ------------------------
+\pagestyle{plain}
+\raggedbottom % Layout on uncomplete pages
+\emergencystretch=2em % Allow extra stretch to avoid overfull lines
+
+
+\titleformat{\chapter}[display]
+    {\normalfont\huge\bfseries}{\chaptertitlename\ \thechapter}{10pt}{\LARGE}
+\titlespacing*{\chapter}{0pt}{0pt}{20pt}
+\chaptertitlefont{\fontsize{22pt}{30pt}\selectfont}
+
+\hypersetup{ % Link colour
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=black
+}
+
+% \renewcommand{\footnoterule}{ % Footnote dividing line layout
+%   \kern -3pt
+%   \hrule width \textwidth height 1pt
+%   \kern 2pt
+% } 
+\renewcommand{\footnotesize}{\fontsize{11pt}{13pt}\selectfont} % Footnote font layout
+\setlength{\footnotesep}{0.5cm} % Footnote spacing
+\setlength{\skip\footins}{1.5cm} % Footnote/body spacing
+
+\DeclareUnicodeCharacter{02BC}{}
+
+% ------------------------
+% ---- DOCUMENT START ----
+% ------------------------
+\addbibresource{bibliography.bib} % Bibliography import
+\begin{document} % Document start
+\pagenumbering{gobble} % No page numbering
+\input{Front.tex} % FRONT PAGE
+\input{Dedication.tex} % Dedication page
+\input{Acknowledgment.tex} % Acknowledgments page
+\input{Abstract} % Abstract
+\tableofcontents  % Index generation
+\newpage % New page
+\pagenumbering{arabic} % Page numbering on for main thesis body
+\setcounter{chapter}{0} % Introduction counts as chapter 0
+% ------------------
+% ---- CHAPTERS ----
+% ------------------
+\input{Chapters/Introduction}
+\input{Chapters/robotsandagriculture}
+\input{Chapters/Requirements}
+\input{Chapters/kinematics and Dynamics}
+\input{Chapters/manupulator}
+\input{Chapters/gripperDesign}
+\input{Chapters/Computer Vision}
+\input{Chapters/experiments}
+\input{Chapters/Conclusion}
+\input{Chapters/AppendixA}
+% \input{Chapters/AppendixB}
+
+
+% ----------------------
+% ---- BIBLIOGRAPHY ----
+% ----------------------
+
+\input{Chapters/Bibliography}
+
+% ----------------------
+% ---- DOCUMENT END ----
+% ----------------------
+\end{document}
