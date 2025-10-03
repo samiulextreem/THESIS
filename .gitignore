@@ -19,6 +19,7 @@
 *.vrb
 *.gz
 *.pdf
+!main.pdf
 _build/
 latexmk/
 Thumbs.db
