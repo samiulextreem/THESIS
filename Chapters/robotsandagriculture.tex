@@ -1,11 +1,11 @@
-\chapter{Robots in agriculture}
+\chapter{Robots in Agriculture}
 \section{Robotics in Agriculture}
-In 2025, agricultural robotics is at the forefront of transforming farming practices with cutting-edge technology. Key advancements include fully autonomous tractors, like John Deere's 2025 models, which perform tillage functions without human intervention, increasing efficiency and reducing labor costs [\cite{DeereCES2025}]. Precision harvesting robots, such as those from Harvest CROO, address labor shortages by picking crops like strawberries with precision and speed, reducing post-harvest losses. Drones play a crucial role in crop monitoring and precision spraying, enabling farmers to make data-driven decisions and optimize resource use [\cite{BuiltInAgRobots}]. Sophisticated weeding and planting robots, like Lettuce Bot from Blue River Technology (now part of John Deere), reduce herbicide use and manual labor by autonomously thinning and weeding fields [\cite{Robovision2025}]. 
+In 2025, agricultural robotics is at the forefront of transforming farming practices with cutting-edge technology. Key advancements include fully autonomous tractors, like John Deere's 2025 models, which perform tillage functions without human intervention, increasing efficiency and reducing labor costs \cite{DeereCES2025}. Precision harvesting robots, such as those from Harvest CROO, address labor shortages by picking crops like strawberries with precision and speed, reducing post-harvest losses. Drones play a crucial role in crop monitoring and precision spraying, enabling farmers to make data-driven decisions and optimize resource use \cite{BuiltInAgRobots}. Sophisticated weeding and planting robots, like Lettuce Bot from Blue River Technology (now part of John Deere), reduce herbicide use and manual labor by autonomously thinning and weeding fields \cite{Robovision2025}. 
 
 \subsection{Robotic manipulators in agriculture}
 The state-of-the-art in agricultural robotics encompasses a wide range of applications, each addressing specific challenges in farming. Below, we detail the major categories and examples:
 Autonomous Tractors and Vehicles:
-One of the most significant developments is the introduction of fully autonomous tractors. For instance, John Deere revealed new autonomous machines at CES 2025, with driverless autonomy systems available for model year 2025 and newer 8R and 9R tractors, initially for tillage functions [\cite{DeereCES2025}]. These tractors can operate without human intervention, reducing labor costs and increasing efficiency. This aligns with the trend of precision farming, where GPS and AI enable precise navigation and task execution. In general, application of robotics in agriculture can be divided into two sections:
+One of the most significant developments is the introduction of fully autonomous tractors. For instance, John Deere revealed new autonomous machines at CES 2025, with driverless autonomy systems available for model year 2025 and newer 8R and 9R tractors, initially for tillage functions \cite{DeereCES2025}. These tractors can operate without human intervention, reducing labor costs and increasing efficiency. This aligns with the trend of precision farming, where GPS and AI enable precise navigation and task execution. In general, application of robotics in agriculture can be divided into two sections:
 
 
 
@@ -18,30 +18,30 @@ Harvesting robots are transforming labor-intensive tasks, particularly for delic
 \begin{figure}
     \centering
     \includegraphics[width=0.5\linewidth]{pictures/robot_pickingapple.png}
-    \caption{Internal view of one of the UR5 robotic arms mounted on the linear rail system used to scan the apple trees. [\cite{robotApple}]}
+    \caption{Internal view of a UR5 robotic arm on the linear rail used to scan apple trees \cite{robotApple}}
     \label{fig:applerobot}
 \end{figure}
 
-This research presents a cooperative grape-harvesting system using two heterogeneous robots—an 'expert' for picking and a 'helper' for transport—to address farm labor shortages and improve efficiency. Field experiments validated the navigation and collaboration strategy, while future enhancements explore logic-based decision-making for autonomous agricultural robots[\cite{robot_grape}].
+This research presents a cooperative grape-harvesting system using two heterogeneous robots—an 'expert' for picking and a 'helper' for transport—to address farm labor shortages and improve efficiency. Field experiments validated the navigation and collaboration strategy, while future enhancements explore logic-based decision-making for autonomous agricultural robots \cite{robot_grape}.
 \begin{figure}
     \centering
     \includegraphics[width=0.75\linewidth]{pictures/grape_robot.png}
-    \caption{experimental robot arm picking grapes in lab setup[\cite{robot_grape}]}
-    \label{fig:enter-label}
+    \caption{Experimental robot arm picking grapes in lab setup \cite{robot_grape}}
+    \label{fig:grape_lab}
 \end{figure}
 
 
-SWEEPER, the pioneering sweet pepper harvesting robot, achieves 61\% success in optimized greenhouse conditions with 24-second harvest cycles, proving robotics' potential while highlighting the need for crop adaptation. Its commercial-scale testing (262 fruits) reveals critical trade-offs between speed, accuracy, and real-world agricultural constraints[\cite{SweeperProject}].
+SWEEPER, the pioneering sweet pepper harvesting robot, achieves 61\% success in optimized greenhouse conditions with 24-second harvest cycles, proving robotics' potential while highlighting the need for crop adaptation. Its commercial-scale testing (262 fruits) reveals critical trade-offs between speed, accuracy, and real-world agricultural constraints \cite{SweeperProject}.
 
 \begin{figure}
     \centering
     \includegraphics[width=0.5\linewidth]{pictures/bell_pepper.jpg}
-    \caption{sweeper robot picking bell pepper}
-    \label{fig:enter-label}
+    \caption{Sweeper robot picking bell pepper}
+    \label{fig:bell_pepper}
 \end{figure}
 
 \textbullet \,\textbf{ Weeding and Planting Robots}:
-Robotic systems for weeding and planting are becoming more sophisticated, addressing the need for precision and reduced chemical use. The OMEGA robot from Terra Robotics, for example, uses laser technology for autonomous weeding, eliminating the need for chemical herbicides and promoting organic farming [\cite{TerraRobotics}]. Planting robots, often equipped with GPS, ensure optimal seed spacing and depth, improving crop uniformity and yield. These innovations are crucial for sustainable agriculture, reducing environmental impact and labor costs. Carbon Robotics develops AI-powered agricultural robots, specializing in autonomous weed control systems using laser technology to enable sustainable, precision farming. Their flagship product is the 'LaserWeeder' designed to reduce herbicide use while improving crop yields[\cite{CarbonRobotics}].
+Robotic systems for weeding and planting are becoming more sophisticated, addressing the need for precision and reduced chemical use. The OMEGA robot from Terra Robotics, for example, uses laser technology for autonomous weeding, eliminating the need for chemical herbicides and promoting organic farming \cite{TerraRobotics}. Planting robots, often equipped with GPS, ensure optimal seed spacing and depth, improving crop uniformity and yield. These innovations are crucial for sustainable agriculture, reducing environmental impact and labor costs. Carbon Robotics develops AI-powered agricultural robots, specializing in autonomous weed control systems using laser technology to enable sustainable, precision farming. Their flagship product is the 'LaserWeeder' designed to reduce herbicide use while improving crop yields \cite{CarbonRobotics}.
 
 \subsection{Compliant Grippers in Agricultural Robotics}
 The development of effective robotic end-effectors for horticulture remains a significant challenge due to the irregular shapes, fragile textures, and variable sizes of fruits and vegetables. While robotic grippers have been studied for decades, most existing designs are narrowly tailored to single crops like tomatoes or strawberries, limiting their versatility in real-world agricultural applications. Compliant materials emerge as a promising solution, enabling end-effectors to conform gently to produce surfaces, distribute pressure evenly, and minimize damage during handling. Traditional rigid fingers, though mechanically simple, lack adaptability, while articulated designs introduce control complexity without guaranteeing reliability. This study focuses on medium-sized spherical fruits (e.g., apples, tomatoes) with diameters of 40–100 mm, using ripe tomatoes—a worst-case scenario due to their low Young’s Modulus (2.32 MPa)—as a benchmark for gripper design[\cite{russo2017design}]
@@ -51,7 +51,7 @@ The development of effective robotic end-effectors for horticulture remains a si
     \centering
     \includegraphics[width=0.5\linewidth]{pictures/tomato_gripper.png}
     \caption{testing a gripper design on different quality of tomatos [\cite{russo2017design}]}
-    \label{fig:enter-label}
+    \label{fig:tomato_gripper}
 \end{figure}
 
 
@@ -60,8 +60,8 @@ this study introduces eight innovative 1-degree-of-freedom end-effectors based o
 \begin{figure}
     \centering
     \includegraphics[width=1\linewidth]{pictures/gripper_different_shape.png}
-    \caption{Grasping states of different long column strip objects: (a) cherry, (b) loquat, and (c) zucchini.[\cite{multipurpuse_gripper}]}
-    \label{fig:enter-label}
+    \caption{Grasping states of long column strip objects: (a) cherry, (b) loquat, (c) zucchini \cite{multipurpuse_gripper}}
+    \label{fig:gripper_shapes}
 \end{figure}
 
 Based on these study, I can conclude that the design for the asparagus gripper should requires a more sophisticated gripper design compared to other fruits/vegetables:
@@ -74,7 +74,7 @@ Fragility and Surface Sensitivity: The tender skin and high moisture content of 
  Asparagus grows at varying angles and densities in the field, requiring grippers with advanced spatial awareness (e.g., 3D vision) and adaptability to selectively harvest mature spears without disturbing adjacent plants.
 
 
-\section{Comprehensive Analysis: Rationale for \newline Robotics in Asparagus Farming}
+\section{Comprehensive Analysis: Rationale for Robotics in Asparagus Farming}
 
 Asparagus sprouts, commonly referred to as spears, are harvested primarily by hand in most parts of the world, a method rooted in the crop’s delicate nature and the need for selective picking. Asparagus (Asparagus officinalis) is a perennial plant, with spears emerging from underground crowns in spring and early summer. Harvesting occurs daily or every few days during the 6- to 8-week season, depending on climate and growth rates, as spears must be collected when they reach an optimal height (typically 5-9 inches) before they "fern out" and become fibrous. Workers use knives or snap the spears by hand just above or below the soil surface, depending on market preferences—snapping yields an all-edible product, while cutting below ground adds weight but includes a tougher base often discarded.
 
@@ -89,12 +89,12 @@ Socially, the reliance on manual labor ties asparagus production to broader work
 \begin{figure}
     \centering
     \includegraphics[width=1\linewidth]{pictures/picking_labour.png}
-    \caption{manual process of picking spear from field}
-    \label{fig:enter-label}
+    \caption{Manual process of picking spears from the field}
+    \label{fig:manual_pick}
 \end{figure}
 	
 
-labor shortages, exacerbated by aging rural populations and urban migration (e.g., China’s rural workforce over 60 exceeds 23 per recent census trends), strain production capacity, prompting a push for [\cite{mccluskey2007economics}] and agricultural mechanization trends alternatives which is outlined in the following table \ref{tab:benefits}
+labor shortages, exacerbated by aging rural populations and urban migration (e.g., China’s rural workforce over 60 exceeds 23 per recent census trends), strain production capacity, prompting a push for agricultural mechanization alternatives, outlined in Table~\ref{tab:benefits} \cite{mccluskey2007economics}
 
 
 
@@ -118,7 +118,7 @@ labor shortages, exacerbated by aging rural populations and urban migration (e.g
         \textbf{Labor Relief} & Frees workers for higher-value tasks, improving rural economies. & 20-30 percent labor reallocation potential. \\
         \hline
     \end{tabular}
-    \caption{Table showing the importance and benefits of various aspects.}
+    \caption{Importance and benefits of automation aspects}
     \label{tab:benefits}
 \end{table}
 
@@ -126,44 +126,44 @@ labor shortages, exacerbated by aging rural populations and urban migration (e.g
 
 
 \subsection{Selective Robotic Harvesters with Vision Systems}
-Among the most promising advancements in asparagus harvesting automation are selective robotic harvesters equipped with vision systems, a technology that has gained traction in recent years as labor costs soar and workforce availability dwindles. These systems, such as the ``Sprout'' harvester developed by Muddy Machines in the UK and the SPARTerS [\cite{cordis2025}] project’s underground detection robot in Europe, rely on sophisticated imaging—ranging from RGB cameras to stereo vision and Time-of-Flight sensors—to identify asparagus spears ready for harvest. The process begins with the system scanning the field, detecting spears based on height, thickness, and maturity, then directing a robotic arm to either cut or grasp them with precision. The ``Sprout'' machine, trialed in 2022 with Britain’s largest asparagus grower[\cite{muddymachines2025}], boasts an impressive capacity of 15 acres per day, roughly equivalent to a small human crew, while the SPARTerS robot, designed for white asparagus, uses subsurface sensors to locate spears beneath soil mounds, avoiding damage to the delicate crowns that ensure future yields. These innovations have found footing in high-labor-cost regions like the UK, Netherlands, Germany, and New Zealand, where growers face wages exceeding \$15--20 per hour and seasonal labor shortages driven by urban migration and aging rural populations. The appeal lies in their ability to mimic human selectivity, a critical requirement for fresh asparagus markets where uniformity and tenderness command premium prices—often \$3--5 per pound in local U.S. markets or €4--6 per kilogram in Europe.
+Among the most promising advancements in asparagus harvesting automation are selective robotic harvesters equipped with vision systems, a technology that has gained traction in recent years as labor costs soar and workforce availability dwindles. These systems, such as the ``Sprout'' harvester developed by Muddy Machines in the UK and the SPARTerS project’s underground detection robot in Europe, rely on sophisticated imaging—ranging from RGB cameras to stereo vision and Time-of-Flight sensors—to identify asparagus spears ready for harvest. The process begins with the system scanning the field, detecting spears based on height, thickness, and maturity, then directing a robotic arm to either cut or grasp them with precision. The ``Sprout'' machine, trialed in 2022 with Britain’s largest asparagus grower[\cite{muddymachines2025}], boasts an impressive capacity of 15 acres per day, roughly equivalent to a small human crew, while the SPARTerS robot, designed for white asparagus, uses subsurface sensors to locate spears beneath soil mounds, avoiding damage to the delicate crowns that ensure future yields. These innovations have found footing in high-labor-cost regions like the UK, Netherlands, Germany, and New Zealand, where growers face wages exceeding \$15--20 per hour and seasonal labor shortages driven by urban migration and aging rural populations. The appeal lies in their ability to mimic human selectivity, a critical requirement for fresh asparagus markets where uniformity and tenderness command premium prices—often \$3--5 per pound in local U.S. markets or €4--6 per kilogram in Europe.
 
-The development of these systems reflects a broader push toward precision agriculture, spurred by advancements in AI and robotics over the past decade. Early prototypes, emerging around 2015, struggled with basic image recognition, but by 2020, projects like SPARTerS—funded through EU Horizon programs[\cite{pnoconsultants_horizon}]—integrated machine learning to boost accuracy. Today, they’re piloted on farms covering hundreds of acres, with companies touting labor cost reductions of 30--40\% over manual methods. Yet, their adoption remains limited, concentrated among large-scale producers who can absorb the steep initial investment—units like the ``Sprout'' harvester retail for upwards of \$450,000, plus maintenance costs that can add \$50,000 annually[\cite{muddymachines2025}][\cite{muddymachines2025}]. For smaller farms, which dominate U.S. asparagus production (75\% under one acre per Penn State Extension, 2021), this price tag is prohibitive, locking them into traditional labor models despite competitive pressures from imports like Peru, which supplies 60\% of U.S. consumption at lower costs.
+The development of these systems reflects a broader push toward precision agriculture, spurred by advancements in AI and robotics over the past decade. Early prototypes, emerging around 2015, struggled with basic image recognition, but by 2020, projects like SPARTerS—funded through EU Horizon programs[\cite{pnoconsultants_horizon}]—integrated machine learning to boost accuracy. Today, they’re piloted on farms covering hundreds of acres, with companies touting labor cost reductions of 30--40\% over manual methods. Yet, their adoption remains limited, concentrated among large-scale producers who can absorb the steep initial investment—units like the ``Sprout'' harvester retail for upwards of \$450,000, plus maintenance costs that can add \$50,000 annually \cite{muddymachines2025}. For smaller farms, which dominate U.S. asparagus production (75\% under one acre per Penn State Extension, 2021), this price tag is prohibitive, locking them into traditional labor models despite competitive pressures from imports like Peru, which supplies 60\% of U.S. consumption at lower costs.
 
-Another important innovation from the east where they utilized 3 DOF robot arm with spring loaded mechanism to make the whole operation light weight and agile as possible as shown in the figure . The Mainichi Japan article from December 15, 2019, reports that Japan’s Ministry of Agriculture, Forestry and Fisheries (MAFF) is investing 100 million yen to develop an asparagus harvesting robot, aiming to address labor shortages in the country’s 5,000-hectare asparagus industry. The robot, designed to pick 1,000 spears per hour, targets export markets like Europe and North America, where labor costs are high. It features a mobile platform with vision-guided robotic arms, as shown in an accompanying image of the system harvesting green asparagus.According to report,  Given its design for a controlled 1,000 spears/hour pace, it likely struggles with real-world variability, lacking the adaptability your 3D stereo camera and point cloud data could provide for better spatial mapping and navigation[\cite{mainichi2019asparagus}].
+Another important innovation from the East that utilized a 3-DoF robot arm with a spring-loaded mechanism to make the whole operation light weight and agile as possible as shown in the figure . The Mainichi Japan article from December 15, 2019, reports that Japan’s Ministry of Agriculture, Forestry and Fisheries (MAFF) is investing 100 million yen to develop an asparagus harvesting robot, aiming to address labor shortages in the country’s 5,000-hectare asparagus industry. The robot, designed to pick 1,000 spears per hour, targets export markets like Europe and North America, where labor costs are high. It features a mobile platform with vision-guided robotic arms, as shown in an accompanying image of the system harvesting green asparagus.According to report,  Given its design for a controlled 1,000 spears/hour pace, it likely struggles with real-world variability, lacking the adaptability your 3D stereo camera and point cloud data could provide for better spatial mapping and navigation[\cite{mainichi2019asparagus}].
 
 
 
 \begin{figure}
     \centering
     \includegraphics[width=0.75\linewidth]{pictures/muddyMachine.png}
-    \caption{sprout from muddy machine}
-    \label{fig:enter-label}
+    \caption{Sprout from Muddy Machines}
+    \label{fig:muddy_sprout}
 \end{figure}
 	
 
 \begin{figure}
     \centering
     \includegraphics[width=0.75\linewidth]{pictures/spingel.png}
-    \caption{SPARTerS project from GERMANY}
-    \label{fig:enter-label}
+    \caption{SPARTerS project from Germany}
+    \label{fig:spartners}
 \end{figure}
 
 \begin{figure}
     \centering
     \includegraphics[width=0.75\linewidth]{pictures/INAHOROBOT.png}
-    \caption{robot from inaho working in greenhouse environment}
-    \label{fig:enter-label}
+    \caption{Robot from Inaho working in a greenhouse environment}
+    \label{fig:inaho}
 \end{figure}
 
 
 
-The limitations of these robotic harvesters are as significant as their potential. Field tests reveal inconsistent performance in real-world conditions—success rates drop from 90\% in controlled settings to 77\% in cluttered fields where spears grow less than 10 cm apart, as noted in \textit{Mobile Robot System for Selective Asparagus Harvesting} [\cite{mdpi2023mobile}]. Uneven terrain, muddy patches, or low-light conditions further erode reliability, with studies like \textit{Robotic Harvesting of Asparagus using Machine Learning and Time-of-Flight Imaging} [\cite{peebles2022robotic}] reporting a 92.3\% detection rate that plummets after dusk. Economically, their high cost yields a slow return on investment, requiring years of operation across a short 6--8 week season to break even, a challenge compounded by the need for trained technicians in rural areas[\cite{waea2004simulation}]. Socially, they risk displacing seasonal workers, a concern in regions like Michigan or Spain where asparagus harvesting supports migrant and rural livelihoods. What these systems lack is affordability to democratize access, robust adaptability to diverse environmental variables, and the nuanced decision-making humans employ when faced with partially hidden spears or unexpected obstacles—gaps.
+The limitations of these robotic harvesters are as significant as their potential. Field tests reveal inconsistent performance in real-world conditions—success rates drop from 90\% in controlled settings to 77\% in cluttered fields where spears grow less than 10 cm apart, as noted in \textit{Mobile Robot System for Selective Asparagus Harvesting} \cite{mdpi2023mobile}. Uneven terrain, muddy patches, or low-light conditions further erode reliability, with studies like \textit{Robotic Harvesting of Asparagus using Machine Learning and Time-of-Flight Imaging} \cite{peebles2022robotic} reporting a 92.3\% detection rate that plummets after dusk. Economically, their high cost yields a slow return on investment, requiring years of operation across a short 6--8 week season to break even, a challenge compounded by the need for trained technicians in rural areas[\cite{waea2004simulation}]. Socially, they risk displacing seasonal workers, a concern in regions like Michigan or Spain where asparagus harvesting supports migrant and rural livelihoods. What these systems lack is affordability to democratize access, robust adaptability to diverse environmental variables, and the nuanced decision-making humans employ when faced with partially hidden spears or unexpected obstacles—gaps.
 
 \subsection{Nonselective Mechanical Harvesters}
 A more established, though less versatile, automation method is the nonselective mechanical harvester, which has been used for decades in asparagus production, particularly for processed markets like canning or freezing. Unlike selective robots, these machines operate on a simpler principle: a blade or cutting bar, mounted on a tractor or mobile frame, sweeps through the field at a fixed height—typically 1--2 inches above or below the soil—harvesting all spears in its path regardless of size or maturity. After collection, workers or secondary machines sort the haul, separating marketable spears from those too small or over-mature. This approach is most common in industrial-scale operations, such as those in China (the world’s top producer at over 7 million tons annually) or the U.S., where companies like Seneca Foods use it for processed asparagus sold at \$1--2 per can. Its roots trace back to the 1970s, when rising labor costs first prompted mechanization experiments, though early designs were crude and wasteful, cutting more than they salvaged[\cite{usda2022labor}].
 
-Globally, nonselective harvesters persist in niche roles because of their lower cost—ranging from \$50,000 to \$150,000—and straightforward maintenance, appealing to producers prioritizing volume over quality[\cite{usda2023asparagus}]. In regions like Peru, which exports 120,000 tons yearly, they complement manual labor for secondary harvests, capturing spears missed by workers. However, their economic viability is narrow. Simulations from \textit{Simulation of Harvesting Asparagus: Mechanical vs. Manual} [\cite{waea2004simulation}] show a recovery rate of just 50--60\% compared to manual harvesting, well below the 72--73\% threshold needed to match human profitability for fresh markets. This inefficiency stems from cutting unripe spears, which stunts future growth, and damaging crowns, reducing yields in subsequent seasons by up to 10--15\%. For fresh asparagus, where consumers demand spears of consistent length and tenderness, the method falls flat, relegating it to processed goods where quality standards are laxer[\cite{usda2023asparagus}].
+Globally, nonselective harvesters persist in niche roles because of their lower cost—ranging from \$50,000 to \$150,000—and straightforward maintenance, appealing to producers prioritizing volume over quality[\cite{usda2023asparagus}]. In regions like Peru, which exports 120,000 tons yearly, they complement manual labor for secondary harvests, capturing spears missed by workers. However, their economic viability is narrow. Simulations from \textit{Simulation of Harvesting Asparagus: Mechanical vs. Manual} \cite{waea2004simulation} show a recovery rate of just 50--60\% compared to manual harvesting, well below the 72--73\% threshold needed to match human profitability for fresh markets. This inefficiency stems from cutting unripe spears, which stunts future growth, and damaging crowns, reducing yields in subsequent seasons by up to 10--15\%. For fresh asparagus, where consumers demand spears of consistent length and tenderness, the method falls flat, relegating it to processed goods where quality standards are laxer[\cite{usda2023asparagus}].
 
 The limitations are stark: nonselective harvesters lack the selectivity to preserve unharvested spears or meet fresh market demands, a critical flaw as fresh asparagus accounts for 70\% of U.S. retail value [\cite{usda2023asparagus}]. They also pose sustainability risks—overharvesting weakens plant longevity, clashing with modern goals of resource efficiency. Socially, they reduce labor needs but don’t eliminate them entirely, as sorting remains manual, perpetuating low-wage jobs without addressing broader workforce shortages. What’s missing is the ability to adapt to selective harvesting needs, minimize long-term crop damage, and integrate with systems that prioritize quality over sheer volume—an area where your proposed technology could offer a smarter alternative.
 
@@ -174,12 +174,12 @@ Their appeal lies in affordability and simplicity—costing \$20,000--\$50,000, 
 
 What these technologies lack is the leap to full automation, leaving the core challenge of labor dependency unresolved. They also miss advanced decision-making to optimize picking beyond human input, and their integration with broader production systems—planting, sorting, packing—remains rudimentary. Socially, they improve worker conditions but don’t address job precarity, as seasonal roles persist. Your thesis’s LLM-driven robotic arm could push beyond this assist model, offering a fully autonomous solution that these tools only hint at.
 
-An emerging frontier in asparagus automation involves delta robot systems mounted on mobile platforms, a concept gaining attention through research like \textit{Mobile Robot System for Selective Asparagus Harvesting} [\cite{mdpi2023mobile}]. These systems feature lightweight, tripod-like delta arms—known for their speed in industrial settings—mounted on tracked or wheeled bases that roam open fields. Guided by real-time vision algorithms, they detect green asparagus spears and pick them in roughly 3.5 seconds per cycle, a pace that rivals human workers in controlled conditions. Developed through lab and field trials, primarily in Germany, they’ve achieved an 88\% success rate in test plots, targeting small- to mid-sized farms where flexibility matters. Their design evolved from factory robotics, adapted since 2018 for agriculture’s rougher terrain, with prototypes now navigating rows up to 500 meters long[\cite{sparters2020automated}].
+An emerging frontier in asparagus automation involves delta robot systems mounted on mobile platforms, a concept gaining attention through research like \textit{Mobile Robot System for Selective Asparagus Harvesting} \cite{mdpi2023mobile}. These systems feature lightweight, tripod-like delta arms—known for their speed in industrial settings—mounted on tracked or wheeled bases that roam open fields. Guided by real-time vision algorithms, they detect green asparagus spears and pick them in roughly 3.5 seconds per cycle, a pace that rivals human workers in controlled conditions. Developed through lab and field trials, primarily in Germany, they’ve achieved an 88\% success rate in test plots, targeting small- to mid-sized farms where flexibility matters. Their design evolved from factory robotics, adapted since 2018 for agriculture’s rougher terrain, with prototypes now navigating rows up to 500 meters long[\cite{sparters2020automated}].
 \begin{figure}
     \centering
     \includegraphics[width=0.75\linewidth]{pictures/delta_robot.png}
     \caption{Delta Robot Systems on Mobile Platform}
-    \label{fig:enter-label}
+    \label{fig:delta_mobile}
 \end{figure}
 
 
@@ -195,7 +195,7 @@ These systems lack the precision and speed to fully replace humans in uncontroll
 
 
 
-Developing an AI-driven robotic arm for asparagus harvesting, powered by large language models (LLMs) and computer vision, presents significant challenges that must be navigated to achieve success. The first major hurdle is the high development cost. Creating a prototype requires expensive hardware—high-resolution cameras, precise actuators, and robust robotic arms\newline combined with extensive software development to train computer vision models and LLMs on asparagus-specific datasets.Cloud or edge computing resources for LLMs further inflate expenses, potentially limiting accessibility without subsidies or partnerships. Another challenge is the complexity of field conditions. Asparagus grows in uneven terrain with variable lighting, shadows, and weed occlusion, which can reduce computer vision accuracy below 90 percent in adverse conditions like rain or dusk.
+Developing an AI-driven robotic arm for asparagus harvesting, powered by large language models (LLMs) and computer vision, presents significant challenges that must be navigated to achieve success. The first major hurdle is the high development cost. Creating a prototype requires expensive hardware—high-resolution cameras, precise actuators, and robust robotic arms—combined with software development to train computer vision models and LLMs on asparagus-specific datasets. Cloud or edge computing resources for LLMs further inflate expenses, potentially limiting accessibility without subsidies or partnerships. Another challenge is the complexity of field conditions. Asparagus grows in uneven terrain with variable lighting, shadows, and weed occlusion, which can reduce computer vision accuracy below 90 percent in adverse conditions like rain or dusk.
 
 
 My motivation to improve the field of asparagus farming through an AI-driven robotic arm, powered by large language models (LLMs) and computer vision, stems from a deep desire to address pressing challenges and transform agricultural practices for a sustainable future. Asparagus harvesting is labor-intensive, requiring workers to painstakingly cut spears at precise moments to ensure quality and crown health, yet farms worldwide face acute labor shortages, with seasonal worker availability dropping by 20 percent in regions like North America since 2020 . By developing a robotic arm that autonomously identifies and picks asparagus using computer vision, I aim to alleviate this burden, enabling farms to maintain output without relying on scarce human labor. Systems like Octinion’s asparagus robot inspire this vision, demonstrating that vision-based automation can match human precision . Beyond labor, I am driven to enhance harvest precision. Asparagus quality depends on cutting spears at the right length and maturity, a task where errors reduce market value by up to 15 percent. Computer vision, trained on diverse field datasets, can achieve over 95 percent accuracy in spear detection. This precision not only boosts farm revenue but also strengthens food security as global asparagus demand grows by 4 percent annually. Efficiency is another core motivator. Manual harvesting is slow, with workers averaging 3-5 seconds per spear, limiting scalability as labor costs consume half of production budgets. My goal is a robotic arm that picks in under a second, operating 24/7 to maximize yield and minimize waste, allowing farms to scale without proportional cost increases. LLMs could coordinate multiple arms, streamlining large-scale operations. Sustainability further fuels my passion.

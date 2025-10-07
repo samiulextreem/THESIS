@@ -85,11 +85,18 @@ To enhance downstream segmentation and localization, the raw cloud undergoes a p
 The resulting cloud provides a compact, denoised representation suitable for spear segmentation and 3D pose extraction.
 
 \section{segmentation}
-Segmentation partitions the sensed scene into spear and non-spear regions and, when required, separates individual spears (instance-level segmentation). Two complementary strategies are considered depending on sensing modality and compute budget:
+Segmentation partitions the sensed scene into spear and non-spear regions and, when required, separates individual spears (instance-level segmentation). Two 
+complementary strategies are considered depending on sensing modality and compute budget:
 \begin{enumerate}
-  \item \textbf{Geometry-first 3D segmentation}: Cluster the filtered point cloud using Euclidean or density-based methods, followed by geometric constraints on cluster height, thickness, and verticality to retain spear-like structures. This approach is robust to color variation and leverages ground-removed geometry.
-  \item \textbf{Learning-based image segmentation}: Apply a convolutional neural network for semantic or instance segmentation in 2D (e.g., encoder--decoder architectures). The 2D masks are lifted to 3D via the registered depth to obtain per-spear point sets. This approach captures fine visual cues and handles partial occlusions when sufficient training data are available.
+  \item \textbf{Geometry-first 3D segmentation}: Cluster the filtered point cloud using Euclidean or density-based methods, followed by geometric constraints on 
+  cluster height, thickness, and verticality to retain spear-like structures. This approach is robust to color variation and leverages ground-removed geometry.
+  \item \textbf{Learning-based image segmentation}: Apply a convolutional neural network for semantic or instance segmentation in 2D 
+  (e.g., encoder--decoder architectures). The 2D masks are lifted to 3D via the registered depth to obtain per-spear point sets. This approach captures 
+  fine visual cues and handles partial occlusions when sufficient training data are available.
 \end{enumerate}
 
-Post-processing includes morphological smoothing, non-maximum suppression for overlapping hypotheses, and temporal association across frames when operating in motion. For each segmented spear, a 3D reference point (e.g., base point above soil or a cut point at a specified height) is estimated by fitting a simple parametric model to the cluster and intersecting with the soil plane. The final output is a set of target poses with confidence scores, which the planning module consumes for execution.
+Post-processing includes morphological smoothing, non-maximum suppression for overlapping hypotheses, and temporal association across 
+frames when operating in motion. For each segmented spear, a 3D reference point (e.g., base point above soil or a cut point at a 
+specified height) is estimated by fitting a simple parametric model to the cluster and intersecting with the soil plane. The final 
+output is a set of target poses with confidence scores, which the planning module consumes for execution.
 

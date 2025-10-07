@@ -32,8 +32,8 @@ to the primary structure.
 
 \subsection*{Kinematic parameters and workspace}
 For analysis and control, the arm is modeled as a planar 2-DOF serial chain with revolute joints. The link lengths are
-\(L_1 = 0.25\,\mathrm{m}\) and \(L_2 = 0.25\,\mathrm{m}\). The nominal planar reach measured from the base frame to the tool tip therefore spans the annulus
-\([\,|L_1-L_2|,\; L_1+L_2\,] = [\,0.00\,\mathrm{m},\; 0.50\,\mathrm{m}\,]\), neglecting self-collisions and end-effector offsets.
+\(L_1 = 0.25\,\mathrm{m}\) and \(L_2 = 0.20\,\mathrm{m}\). The nominal planar reach measured from the base frame to the tool tip therefore spans the annulus
+\([\,|L_1-L_2|,\; L_1+L_2\,] = [\,0.05\,\mathrm{m},\; 0.45\,\mathrm{m}\,]\), neglecting self-collisions and end-effector offsets.
 
 The standard Denavit--Hartenberg (DH) parameters used to formulate forward and inverse kinematics are summarized in Table~\ref{tab:dh_params}.
 
@@ -46,7 +46,7 @@ The standard Denavit--Hartenberg (DH) parameters used to formulate forward and i
 Joint $i$ & $a_i$ [m] & $\alpha_i$ [rad] & $d_i$ [m] & $\theta_i$ [rad] \\
 \hline
 1 & 0.25 & 0 & 0 & $\theta_1$ \\
-2 & 0.25 & 0 & 0 & $\theta_2$ \\
+2 & 0.20 & 0 & 0 & $\theta_2$ \\
 \hline
 \end{tabular}
 \end{table}
@@ -116,7 +116,7 @@ Microcontroller & 2 & Arduino Nano & Control and communication \\
 Power supply & 1 & 12V, 5A & DC power source \\
 Shielded cable & - & Twisted-pair & Wiring harness \\
 3D printing filament (PLA) & 1 & 1 kg spool, 1.75 mm & Rapid prototyping of non-load parts \\
-3D printing filament (PLA) & 1 & 1 kg spool, 1.75 mm & Durable housings and brackets \\
+3D printing filament (TPU) & 1 & 1 kg spool, 1.75 mm & Compliant pads and flexible interfaces \\
 \hline
 \end{tabular}
 \end{table}

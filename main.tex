@@ -6,7 +6,6 @@
 \documentclass[a4paper, oneside, openright]{book}
 \usepackage[T1]{fontenc} % Font encoding, T1 = it
 \usepackage{lmodern}
-\usepackage[final]{microtype} % Better line breaking, reduces overfull hboxes
 \usepackage{multicol} % Used in title page
 \usepackage[utf8]{inputenc} % Input encoding
 \usepackage[english]{babel} % English as main language
@@ -18,6 +17,7 @@
 \usepackage[parfill]{parskip} % Disable indent on paragraph skip
 % \usepackage[hang,flushmargin]{footmisc} % Disable indent in footnotes
 \usepackage{titlesec}
+\usepackage{amsmath} % Needed for commands like \tfrac
 \usepackage{minted} % Used for code
 \usepackage{float}
 \usepackage[font=scriptsize, skip=5pt, justification=centering]{caption} % Caption/image space
@@ -30,6 +30,7 @@
 % \usepackage[justification=centering]{caption} % duplicate removed; options merged above
 \usepackage{csquotes} % Babel dependency
 \usepackage[bottom]{footmisc} % Footnotes positioning
+\usepackage[final]{microtype} % Better line breaking, reduces overfull hboxes (load after footnotes)
 
 % ------------------------
 % ---- DOCUMENT SETUP ----
@@ -42,7 +43,7 @@
 \titleformat{\chapter}[display]
     {\normalfont\huge\bfseries}{\chaptertitlename\ \thechapter}{10pt}{\LARGE}
 \titlespacing*{\chapter}{0pt}{0pt}{20pt}
-\chaptertitlefont{\fontsize{22pt}{30pt}\selectfont}
+% Removed undefined macro \chaptertitlefont (not provided by packages in use)
 
 \hypersetup{ % Link colour
     colorlinks,

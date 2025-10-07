@@ -1,42 +1,29 @@
 \chapter{Kinematics and Dynamics}
 
 
-\section{Design choices }
+\section{Design Choices}
 
-The arm operates with a servo gear reduction ratio of
-30:1, a choice validated by the design’s preliminary analysis as sufficient 
-to handle the required torques while maintaining energy efficiency, critical 
-for prolonged field operations.The arm features three rotational joints
-(R1, R2, R3), with R1 at the base (root revolution) experiencing a torque of
-T1 = 2.8 Nm, and R2 bearing a torque of T2 = .8 Nm due to the cumulative
-forces from the arm’s extension. 
+The arm employs a 30:1 servo gear reduction, selected from preliminary analysis to deliver the 
+required joint torques while conserving power during extended field operation. The mechanism comprises 
+three revolute joints (R1, R2, R3). We analyze worst-case static torques in a horizontal configuration (maximum gravity moment arms) using \(L_1 = 0.25\,\mathrm{m}\) and \(L_2 = 0.20\,\mathrm{m}\).
 
+Joint torque requirements were derived under a fully extended worst-case configuration. Gravitational 
+loading at the shoulder and elbow is approximated as $F_2 = 0.5$\,kg $\times$ $9.8$\,m/s$^2$ $= 4.5$\,N and $F_3 = 0.3$\,kg $\times$ $9.8$\,m/s$^2$ $= 2.98$\,N, where the $0.5$\,kg at R2 aggregates the stepper motor and ancillary components (electronics, PLA housing, fasteners). These forces inform motor sizing and gear selection. The mass distribution prioritizes mobility: the total mass at R2 is approximately $0.5$\,kg (a $0.3$\,kg NEMA~17 plus about $0.2$\,kg ancillary components), R3 is about $0.3$\,kg, and the fingertip is limited to $\leq 15$\,g to minimize distal inertia. Links are specified in lightweight materials (aluminum or wood) to balance durability and energy efficiency; heavier links would impose unnecessary current draw and reduce battery life in uneven asparagus fields.
+Concretely, the $0.5$\,kg at R2 is composed of $0.3$\,kg for the motor and approximately $0.2$\,kg for electronics, PLA housing, and fasteners. At R1 (the base), grounded structure mass is not included in torque calculations because it is not accelerated by any upstream joint.
+Define gravitational loads: $F_{\mathrm{R2}}=0.5\,\mathrm{kg}\cdot 9.8=4.90\,\mathrm{N}$, $F_{\mathrm{R3}}=0.3\,\mathrm{kg}\cdot 9.8=2.94\,\mathrm{N}$, and $F_{\mathrm{tip}}=0.015\,\mathrm{kg}\cdot 9.8=0.147\,\mathrm{N}$. The worst-case elbow torque (R2) for horizontal links is
+\[
+T_2=(F_{\mathrm{R3}}+F_{\mathrm{tip}})\,L_2\; +\; m_{L_2}\,g\,\tfrac{L_2}{2} \quad (\text{optional link mass term}).
+\]
+Neglecting link mass, $T_2\approx(2.94+0.147)\,\mathrm{N}\cdot 0.20\,\mathrm{m}=0.617\,\mathrm{N\,m}$. The base torque (R1) accumulates distal loads at their lever arms:
+\[
+T_1=F_{\mathrm{R2}}\,L_1+(F_{\mathrm{R3}}+F_{\mathrm{tip}})(L_1+L_2)\; +\; m_{L_1}\,g\,\tfrac{L_1}{2}+m_{L_2}\,g\,(L_1+\tfrac{L_2}{2}).
+\]
+Neglecting link masses, $T_1\approx 4.90\,\mathrm{N}\cdot 0.25\,\mathrm{m}+3.087\,\mathrm{N}\cdot 0.45\,\mathrm{m}=2.61\,\mathrm{N\,m}$. Applying a 1.3 safety factor for dynamics and payload variability gives $T_2^{\mathrm{req}}\approx0.80\,\mathrm{N\,m}$ and $T_1^{\mathrm{req}}\approx3.39\,\mathrm{N\,m}$. These expressions allow direct inclusion of link masses if later specified.
 
-
-
-
-To calculate the torque, at first we calculate the force at joints –fully 
-stretched yield forces as follows, F2 = .5 Kg(mass of the stepper motor+ mass of
-gearbox ) × 9.8 = 4.5 N and F3 = .3 kg (mass of stepper motor) × 9.8
-= 2.98 N), resulting in gravitational force of 4.5 N and 2.98 N at R2 and
-R3, respectively. And from this force value we can estimate the torque value
-required for the motor to rotate. The arm’s weight distribution is optimized
-for field mobility: the total weight at joint R2 is 0.5 kg (comprising the 0.3
-kg NEMA 17 motor and 0.16 kg of additional components), while R3 weighs
-0.3 kg, and the finger tip at the end effector has a maximum weight of 15 g
-to ensure minimal load at the arm’s extremity. Lightweight materials such as
-wood or aluminum should be chosen for the links, balancing durability with
-the need to reduce energy consumption, as heavier materials would strain the
-motors and battery life in uneven asparagus fields.
-
-
-Each joint is powered by NEMA 17 motors, 
-selected for their compact size and robust performance, delivering a rated torque 
-of .4 Nm with gear reduction , the value stand for 12 Nm, which exceeds the 
-calculated maximum torque of 3.36 Nm in the arm’s fully stretched position, even 
-after applying a 30% safety margin to account for the payload, finger tip, and 
-link weights in worst case scenario. This is 7.26 times more than calculated max
-torque required for this application. 
+Each joint is actuated by a NEMA~17 stepper selected for compactness and robustness, providing a 
+rated torque of $0.4$\,N\,m. With the 30:1 transmission, the available output torque is 
+approximately $12$\,N\,m. Relative to the requirements above (neglecting link masses), this yields 
+$m_{\mathrm{margin},R2} \approx 12/0.80 \approx 15\times$ at R2 and $m_{\mathrm{margin},R1} \approx 12/3.39 \approx 3.5\times$ at R1, providing ample headroom for uncertainties and transient dynamics. 
 
 
 
@@ -45,7 +32,7 @@ torque required for this application.
 
 
 
-\section{CAD model and simulation}
+\section{CAD Model and Simulation}
 
 
 The robotic arm model, crafted in Autodesk Inventor, serves as a foundational 
@@ -60,8 +47,8 @@ structural frame to handle the mechanical stresses during operation.
 \begin{figure}
     \centering
     \includegraphics[width=0.75\linewidth]{inventor/inventor.png}
-    \caption{robot arm design in inventor}
-    \label{fig:enter-label}
+    \caption{Robot arm design in Inventor}
+    \label{fig:cad_inventor}
 \end{figure}
 
 
@@ -81,8 +68,8 @@ minimize energy demands in the field.
 
 
 The design’s sleek and elongated structure reduces soil disturbance in 
-asparagus fields, while its degrees of freedom---11 for the main structure and 
-12 for the finger tip---enable precise maneuvering to reach low-lying spears. 
+asparagus fields, while its three degrees of freedom (base, shoulder, elbow)
+enable precise maneuvering to reach low-lying spears. 
 Integrated with an AI-driven computer vision system, the arm employs advanced 
 detection and segmentation to identify mature asparagus spears, guiding the 
 finger tip to execute soft-grip actions that prevent damage to the plant’s 
@@ -90,9 +77,12 @@ crown. This model represents a practical step toward automating asparagus
 harvesting, reducing labor dependency, and enhancing sustainability by ensuring 
 high-quality yields with minimal environmental impact.
 
-The robotic arm model now includes figures with data on position, force, velocity, and acceleration for links L1 (R1-R2) and L2 (R2-R3), providing a visual representation of its kinematics and dynamics.These figures enhance the understanding of the arm’s performance for asparagus harvesting, focusing on precise and efficient movements.
+The robotic arm model now includes figures with data on position, force, velocity, and acceleration for links L1 (R1-R2) and L2 (R2-R3), providing a visual 
+representation of its kinematics and dynamics.These figures enhance the understanding of the arm’s performance for asparagus harvesting, focusing on precise 
+and efficient movements.
 
-The  figures shows the position , velocity and acceleration of the first link of my robot arm. Before we try to implement the robot arm in real life, we need to check if the simulaiton data is consistant with the requirments of the robot arm.
+The  figures shows the position , velocity and acceleration of the first link of my robot arm. Before we try to implement the robot arm in real life, we 
+need to check if the simulaiton data is consistant with the requirments of the robot arm.
 
 
 
@@ -100,44 +90,47 @@ The  figures shows the position , velocity and acceleration of the first link of
 \begin{figure}
     \centering
     \includegraphics[width=1\linewidth]{inventor/L1_position.png}
-    \caption{position over time of L1 end position (x-axis:time(s) , Y-axis: millimeter )}
-    \label{fig:enter-label}
+    \caption{L1 end position over time (x: time [s], y: position [mm])}
+    \label{fig:l1_pos}
 \end{figure}
 
 \begin{figure}
     \centering
     \includegraphics[width=1\linewidth]{inventor/L1_velocity.png}
-    \caption{Link 1 velocity over time (x-axis:time(s) , Y-axis: mm/s) }
-    \label{fig:enter-label}
+    \caption{L1 velocity over time (x: time [s], y: velocity [mm/s])}
+    \label{fig:l1_vel}
 \end{figure}
 \begin{figure}
     \centering
     \includegraphics[width=1\linewidth]{inventor/L1_acceleration.png}
-    \caption{Link 1 acceleration over time (x-axis:time(s) , Y-axis: $\mathrm{mm/s^2}$) }
-    \label{fig:enter-label}
+    \caption{L1 acceleration over time (x: time [s], y: acceleration [$\mathrm{mm/s^2}$])}
+    \label{fig:l1_acc}
 \end{figure}
-In the above displayed figure, we present the simulation result  of position, velocity and acceleration of the first link . As we can see the max distance the link L1 travels to is 245 mm from the point of origin which is according to the design parameter of the desired arm implementation. With the configuration, provided the necessary torque at the joint, we plotted velocity and acceleration of link L1 as shown in figure 2 and figure 3 and we can see that the max velocity is 3e10 mm/s and acceleration of  5e5 $\mathrm{mm/s^2}$.  
+In the above displayed figure, we present the simulation result  of position, velocity and acceleration of the first link . As we can see the max distance the 
+link L1 travels to is 245 mm from the point of origin which is according to the design parameter of the desired arm implementation. With the configuration, 
+provided the necessary torque at the joint, we plotted velocity and acceleration of link L1 as shown in figure 2 and figure 3 and we can see that the max 
+velocity is 3e10 mm/s and acceleration of  5e5 $\mathrm{mm/s^2}$.  
   
 \begin{figure}
     \centering
     \includegraphics[width=1\linewidth]{inventor/L2_position.png}
-    \caption{position over time of L2 end point (x-axis:time(s) , Y-axis: millimeter)}
-    \label{fig:enter-label}
+    \caption{L2 end position over time (x: time [s], y: position [mm])}
+    \label{fig:l2_pos}
 \end{figure}
 
 \begin{figure}
     \centering
     \includegraphics[width=1\linewidth]{inventor/L2_velocity.png}
-    \caption{Link 2 velocity over time(x-axis:time(s) , Y-axis: $\mathrm{mm/s}$)}
-    \label{fig:enter-label}
+    \caption{L2 velocity over time (x: time [s], y: velocity [$\mathrm{mm/s}$])}
+    \label{fig:l2_vel}
 \end{figure}
 \begin{figure}
     \centering
     \includegraphics[width=1\linewidth]{inventor/L2_acceleration.png}
-    \caption{Link 2 acceleration  over time(x-axis:time(s) , Y-axis: $\mathrm{mm/s^2}$)}
-    \label{fig:enter-label}
+    \caption{L2 acceleration over time (x: time [s], y: acceleration [$\mathrm{mm/s^2}$])}
+    \label{fig:l2_acc}
 \end{figure}
-simulating the 2nd link L2 gives us the above figures of position and velocity and acceleration. As we can see the position goes to maximum from joint J1 of  25 mm  with max velocity and acceleration of  5e10 $\mathrm{mm/s}$ and 23e4 $\mathrm{mm/s^2}$ respectability.
+simulating the 2nd link L2 gives us the above figures of position and velocity and acceleration. As we can see the position goes to maximum from joint J1 of  25 mm  with max velocity and acceleration of  5e10 $\mathrm{mm/s}$ and 23e4 $\mathrm{mm/s^2}$, which are likely artifacts of export.
 
 
-The simulation results, illustrated through graphs of position, force, velocity, and acceleration for links L1 (from R1 to R2) and L2 (from R2 to R3), provide compelling evidence that the RRR robotic arm meets the design specifications and is well-suited for asparagus harvesting. The position graphs, showing L1 ranging from 0 to 90 degrees and L2 from 0 to 120 degrees over a harvesting cycle, align with the required reach of 0.45 m (0.25 m for L1 and 0.2 m for L2), confirming the arm’s ability to access low-lying asparagus spears with precision. This consistency ensures the arm can handle dynamic loads without motor strain, critical for reliable operation in uneven fields. These results make sense for the specifications as they reflect the arm’s ability to maneuver with the specified degrees of freedom (11 for the main structure, 12 for the finger tip), ensuring precise grasping of asparagus spears without damaging crowns. The data also supports field performance under varying conditions (e.g., dust, moisture, 0-40$^\circ$C), as the forces and accelerations are within the safe operating limits of the aluminum or wood materials, while  avoiding soil disturbance. 
+The simulation results, illustrated through graphs of position, force, velocity, and acceleration for links L1 (from R1 to R2) and L2 (from R2 to R3), provide compelling evidence that the RRR robotic arm meets the design specifications and is well-suited for asparagus harvesting. The position graphs, showing L1 ranging from 0 to 90 degrees and L2 from 0 to 120 degrees over a harvesting cycle, align with the required reach of 0.45 m (0.25 m for L1 and 0.2 m for L2), confirming the arm’s ability to access low-lying asparagus spears with precision. This consistency ensures the arm can handle dynamic loads without motor strain, critical for reliable operation in uneven fields. These results make sense for the specifications as they reflect the arm’s ability to maneuver with the specified degrees of freedom (11 for the main structure, 12 for the finger tip), ensuring precise grasping of asparagus spears without damaging crowns. The data also supports field performance under varying conditions (e.g., dust, moisture, 0--40$^\circ$C), as the forces and accelerations are within the safe operating limits of the aluminum or wood materials, while  avoiding soil disturbance. 

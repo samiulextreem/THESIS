@@ -1,17 +1,17 @@
-\chapter{GRIPPER DESIGN}
+\chapter{Gripper Design}
 \graphicspath{{./}{pictures/}{inventor/}}
-\section{Requirements of objective}
-Picking asparagus with a robotic arm requires a carefully coordinated process that prioritises gentle handling and consistent performance while minimising damage to the plant. The gripper must interface reliably with slender, fragile spears, accommodating natural variability in diameter, length, and orientation. To enable this, the system first detects the presence of asparagus plants in the field and accurately estimates the position, pose, and size of individual spears.
+\section{Requirements of Objective}
+Picking asparagus with a robotic arm requires a carefully coordinated process that prioritizes gentle handling and consistent performance while minimizing damage to the plant. The gripper must interface reliably with slender, fragile spears, accommodating natural variability in diameter, length, and orientation. To enable this, the system first detects the presence of asparagus plants in the field and accurately estimates the position, pose, and size of individual spears.
 
-Perception can be achieved using cameras, LiDAR, or a sensor fusion approach that balances accuracy, robustness, and cost. Visual or depth sensing provides the measurements necessary to localise each spear within the robot’s workspace and to categorise targets according to maturity and suitability for harvesting. These classifications inform grasp strategy—such as contact location, applied force, and approach vector—so that the gripper can secure the spear without bruising, bending, or uprooting adjacent growth. This sensing-to-action pipeline underpins the design requirements for the gripper, ensuring that mechanical, sensing, and control choices collectively support precise, repeatable, and low-damage harvesting.
-
-
+Perception can be achieved using cameras, LiDAR, or a sensor fusion approach that balances accuracy, robustness, and cost. Visual or depth sensing provides the measurements necessary to localize each spear within the robot’s workspace and to categorize targets according to maturity and suitability for harvesting. These classifications inform grasp strategy—such as contact location, applied force, and approach vector—so that the gripper can secure the spear without bruising, bending, or uprooting adjacent growth. This sensing-to-action pipeline underpins the design requirements for the gripper, ensuring that mechanical, sensing, and control choices collectively support precise, repeatable, and low-damage harvesting.
 
 
-\section{Finger design}
+
+
+\section{Finger Design}
 For a finger design to pick and chop the stem of asparagus, I have set up a design based on
-two fingers which will hold the asparagus stem down by a mg995 servo motor adjunct with a
-and a blade holder underneath the finger also driven by another servo mg995. The whole
+two fingers which will hold the asparagus stem down by a MG995 servo motor adjunct with a
+and a blade holder underneath the finger also driven by another servo MG995. The whole
 design is worked on inventor 2025 as it could be seen below
 
 
@@ -62,7 +62,7 @@ profile is shown in Figure~\ref{fig:finger_torque}.
     
 
 
-\section{Electrical schematic and operation}
+\section{Electrical Schematic and Operation}
 
 
 \begin{figure}[H]
@@ -79,7 +79,7 @@ link from a host computer or through Bluetooth Serial communication. A real-time
 actuation—so that each executes without blocking or degrading the performance of the other.
 
 Pulse–width modulation (PWM) signals are generated directly by the ESP32 to command the servos.
-The finger servo (MG992) is driven from pin IO42, while the blade servo is driven from pin IO41.
+The finger servo (MG995) is driven from pin IO42, while the blade servo is driven from pin IO41.
 These assignments allow independent, deterministic control of grasping and cutting actions, with
 timing guarantees provided by the RTOS tasks.
 
@@ -91,11 +91,11 @@ in the Appendix for reproducibility and implementation details.
 
 
 
-\section{End-effector fabrication and assembly}
+\section{End-Effector Fabrication and Assembly}
 
-This section documents the physical realisation of the gripper and cutter. Printed parts were
+This section documents the physical realization of the gripper and cutter. Printed parts were
 fabricated with fine layers for contact surfaces and higher infill for load-bearing features, then
-post-processed by drilling/reaming critical holes to final size. The figures below summarise key
+post-processed by drilling/reaming critical holes to final size. The figures below summarize key
 subassemblies and the final integration.
 
 
@@ -136,10 +136,10 @@ severing during trials.
     \end{figure}
     
     Figure~\ref{fig:finger_gears} depicts the printed spur-gear pair used to kinematically
-    synchronise the two fingers. The arrangement enforces equal and opposite angular motion,
-    yielding symmetric closing and reliable centring of the spear prior to cutting. Gear modules
+    synchronize the two fingers. The arrangement enforces equal and opposite angular motion,
+    yielding symmetric closing and reliable centering of the spear prior to cutting. Gear modules
     and tooth counts were selected to balance compact packaging with adequate torque capacity;
-    backlash was minimised through post-processing of bores and the use of press-fit pins with
+    backlash was minimized through post-processing of bores and the use of press-fit pins with
     lubrication applied after assembly. This configuration reduces differential slip at the contacts
     and improves repeatability of the grasping pose across cycles.
     
@@ -178,14 +178,14 @@ access were considered to enable maintenance and rapid blade exchange during fie
 \end{figure}
 
 Figure~\ref{fig:finger_final} shows the final assembly of the finger and blade module. The finger
-pair is synchronised via the internal gear train and fitted with compliant pads to distribute
+pair is synchronized via the internal gear train and fitted with compliant pads to distribute
 contact pressure, while the blade subassembly is mounted on a rigid bracket driven by a
-high-torque servo.The material used for the pad is flexible filament which bends inwards under the pressure and thus does not damage the asparagus stem.The mechanical packaging preserves a compact envelope around the tool
+high-torque servo. The material used for the pad is flexible filament which bends inwards under the pressure and thus does not damage the asparagus stem. The mechanical packaging preserves a compact envelope around the tool
 centre point, ensuring that the cutting stroke clears the finger workspace and that cable
-routing remains unobstructed. Assembly choices emphasised maintainability: the blade is
+routing remains unobstructed. Assembly choices emphasized maintainability: the blade is
 readily replaceable, servos are accessible for calibration, and all critical joints are supported by
 bushings or bearings to limit wear. The design provides smooth, symmetric closing,
-repeatable centring of the spear, and consistent cut quality across repeated cycles, indicating
+repeatable centering of the spear, and consistent cut quality across repeated cycles, indicating
 that the prototype satisfies the principal design objectives for gentle, reliable harvesting.
 
 
