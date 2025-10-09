@@ -5,11 +5,13 @@
 
 The arm employs a 30:1 servo gear reduction, selected from preliminary analysis to deliver the 
 required joint torques while conserving power during extended field operation. The mechanism comprises 
-three revolute joints (R1, R2, R3). We analyze worst-case static torques in a horizontal configuration (maximum gravity moment arms) using \(L_1 = 0.25\,\mathrm{m}\) and \(L_2 = 0.20\,\mathrm{m}\).
+three revolute joints (R1, R2, R3). We analyze worst-case static torques in a horizontal configuration (maximum gravity moment arms) 
+using \(L_1 = 0.25\,\mathrm{m}\) and \(L_2 = 0.20\,\mathrm{m}\).
 
 Joint torque requirements were derived under a fully extended worst-case configuration. Gravitational 
 loading at the shoulder and elbow is approximated as $F_2 = 0.5$\,kg $\times$ $9.8$\,m/s$^2$ $= 4.5$\,N and $F_3 = 0.3$\,kg $\times$ $9.8$\,m/s$^2$ $= 2.98$\,N, where the $0.5$\,kg at R2 aggregates the stepper motor and ancillary components (electronics, PLA housing, fasteners). These forces inform motor sizing and gear selection. The mass distribution prioritizes mobility: the total mass at R2 is approximately $0.5$\,kg (a $0.3$\,kg NEMA~17 plus about $0.2$\,kg ancillary components), R3 is about $0.3$\,kg, and the fingertip is limited to $\leq 15$\,g to minimize distal inertia. Links are specified in lightweight materials (aluminum or wood) to balance durability and energy efficiency; heavier links would impose unnecessary current draw and reduce battery life in uneven asparagus fields.
-Concretely, the $0.5$\,kg at R2 is composed of $0.3$\,kg for the motor and approximately $0.2$\,kg for electronics, PLA housing, and fasteners. At R1 (the base), grounded structure mass is not included in torque calculations because it is not accelerated by any upstream joint.
+Concretely, the $0.5$\,kg at R2 is composed of $0.3$\,kg for the motor and approximately $0.2$\,kg for electronics, PLA housing, and fasteners. At 
+R1 (the base), grounded structure mass is not included in torque calculations because it is not accelerated by any upstream joint.
 Define gravitational loads: $F_{\mathrm{R2}}=0.5\,\mathrm{kg}\cdot 9.8=4.90\,\mathrm{N}$, $F_{\mathrm{R3}}=0.3\,\mathrm{kg}\cdot 9.8=2.94\,\mathrm{N}$, and $F_{\mathrm{tip}}=0.015\,\mathrm{kg}\cdot 9.8=0.147\,\mathrm{N}$. The worst-case elbow torque (R2) for horizontal links is
 \[
 T_2=(F_{\mathrm{R3}}+F_{\mathrm{tip}})\,L_2\; +\; m_{L_2}\,g\,\tfrac{L_2}{2} \quad (\text{optional link mass term}).
@@ -18,7 +20,10 @@ Neglecting link mass, $T_2\approx(2.94+0.147)\,\mathrm{N}\cdot 0.20\,\mathrm{m}=
 \[
 T_1=F_{\mathrm{R2}}\,L_1+(F_{\mathrm{R3}}+F_{\mathrm{tip}})(L_1+L_2)\; +\; m_{L_1}\,g\,\tfrac{L_1}{2}+m_{L_2}\,g\,(L_1+\tfrac{L_2}{2}).
 \]
-Neglecting link masses, $T_1\approx 4.90\,\mathrm{N}\cdot 0.25\,\mathrm{m}+3.087\,\mathrm{N}\cdot 0.45\,\mathrm{m}=2.61\,\mathrm{N\,m}$. Applying a 1.3 safety factor for dynamics and payload variability gives $T_2^{\mathrm{req}}\approx0.80\,\mathrm{N\,m}$ and $T_1^{\mathrm{req}}\approx3.39\,\mathrm{N\,m}$. These expressions allow direct inclusion of link masses if later specified.
+Neglecting link masses, $T_1\approx 4.90\,\mathrm{N}\cdot 0.25\,\mathrm{m}+3.087\,\mathrm{N}\cdot 0.45\,\mathrm{m}=2.61\,\mathrm{N\,m}$. Applying 
+a 1.3 safety factor for dynamics and payload variability 
+gives $T_2^{\mathrm{req}}\approx0.80\,\mathrm{N\,m}$ and $T_1^{\mathrm{req}}\approx3.39\,\mathrm{N\,m}$. These expressions allow direct 
+inclusion of link masses if later specified.
 
 Each joint is actuated by a NEMA~17 stepper selected for compactness and robustness, providing a 
 rated torque of $0.4$\,N\,m. With the 30:1 transmission, the available output torque is 
