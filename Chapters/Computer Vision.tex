@@ -1,19 +1,32 @@
 \chapter{Computer vision}
 \section{Requirements of objective}
-Automated asparagus harvesting necessitates reliable perception to locate, assess, and safely manipulate spears within complex field conditions. Computer vision provides the sensing and interpretation capabilities required to: (i) detect spears amidst cluttered foliage and soil background; (ii) estimate ripeness or cut-readiness based on geometric and visual cues; (iii) localize targets in three dimensions for tool approach and cutting; and (iv) operate robustly under variability in illumination, occlusions, plant morphology, and weather. In this context, perception performance directly constrains the achievable throughput, product quality, and operational safety of the harvesting system.
+Automated asparagus harvesting necessitates reliable perception to locate, assess, and safely manipulate spears within complex 
+field conditions. Computer vision provides the sensing and interpretation capabilities required to: (i) detect spears amidst 
+cluttered foliage and soil background; (ii) estimate cut-readiness based on geometric and visual cues i.e length, thickness, tip morphology; (iii) 
+localize targets in three dimensions for tool approach and cutting; and (iv) operate robustly under variability in 
+illumination, occlusions, plant morphology, and weather. In this context, perception performance directly constrains the 
+achievable throughput, product quality, and operational safety of the harvesting system.
 
 The primary requirements are summarized as follows:
 \begin{itemize}
-  \item \textbf{Detection accuracy}: High precision and recall to minimize missed harvestable spears and false positives that could cause damage.
-  \item \textbf{Spatial localization}: Centimeter-level 3D pose (position and, where relevant, orientation) sufficient for motion planning of the end effector.
-  \item \textbf{Readiness assessment}: Discrimination between harvestable and non-harvestable spears using measurable features (e.g., height above soil, thickness, tip morphology).
-  \item \textbf{Environmental robustness}: Tolerance to shadows, direct sunlight, moisture, dust, and partial occlusions from leaves or neighboring spears.
+  \item \textbf{Detection accuracy}: High precision and recall to minimize missed harvestable spears and false positives that 
+  could cause damage.
+  \item \textbf{Spatial localization}: Centimeter-level 3D pose (position and, where relevant, orientation) sufficient for 
+  motion planning of the end effector.
+  \item \textbf{Readiness assessment}: Discrimination between harvestable and non-harvestable spears using measurable features 
+  (e.g., height above soil, thickness, tip morphology).
+  \item \textbf{Environmental robustness}: Tolerance to shadows, direct sunlight, moisture, dust, and partial occlusions from 
+  leaves or neighboring spears.
   \item \textbf{Computational efficiency}: Near real-time inference compatible with the platform's compute and energy budgets.
-  \item \textbf{Scalability and maintainability}: Methods that generalize across cultivars, growth stages, and fields with limited re-calibration.
-  \item \textbf{Safety and compliance}: Conservative behavior near humans and plants; perception outputs support fail-safe planning and execution.
+  \item \textbf{Scalability and maintainability}: Methods that generalize across cultivars, growth stages, and fields with 
+  limited re-calibration.
+  \item \textbf{Safety and compliance}: Conservative behavior near humans and plants; perception outputs support fail-safe 
+  planning and execution.
 \end{itemize}
 
-To meet these requirements, this work uses camera-based sensing for both 2D appearance cues and 3D geometric reasoning. The approach integrates image acquisition, camera calibration, point-cloud generation, and segmentation to produce actionable targets for manipulation.
+To meet these requirements, this work uses camera-based sensing for both 2D appearance cues and 3D geometric reasoning. The 
+approach integrates image acquisition, camera calibration, point-cloud generation, and segmentation to produce actionable 
+targets for manipulation.
 
 \section{Dataset collection and  model training}
 A web-sourced image corpus of 200 asparagus scenes was curated and annotated using the COCO methodology to enable instance-level learning. 
@@ -48,7 +61,8 @@ Representative qualitative results are shown in Figure~\ref{fig:inference_result
 \centering
 \includegraphics[width=0.48\linewidth]{test_image.png}\hfill
 \includegraphics[width=0.48\linewidth]{\detokenize{test_image (2).png}}
-\caption{Qualitative inference results on held-out test images. Detected asparagus spears are shown with instance masks and bounding boxes, illustrating robust performance under varied backgrounds and illumination.}
+\caption{Qualitative inference results on held-out test images. Detected asparagus spears are shown with instance masks and bounding boxes, illustrating robust 
+performance under varied backgrounds and illumination.}
 \label{fig:inference_results}
 \end{figure}
 
@@ -72,7 +86,9 @@ Representative qualitative results are shown in Figure~\ref{fig:inference_result
  and sample placement will be provided in this section.
 
 \section{cloud point generation and processing}
-Depth information is converted into a 3D point cloud through back-projection using the calibrated intrinsics. Each pixel with valid depth \(d\) at image coordinates \((u, v)\) is mapped to a camera-frame point \(\mathbf{p}_c = d\,K^{-1}[u\ v\ 1]^\top\), where \(K\) is the intrinsic matrix. Points are then transformed into the robot frame via the known extrinsics. Color values are optionally associated to each 3D point for appearance--geometry fusion.
+Depth information is converted into a 3D point cloud through back-projection using the calibrated intrinsics. Each pixel with valid depth \(d\) at image 
+coordinates \((u, v)\) is mapped to a camera-frame point \(\mathbf{p}_c = d\,K^{-1}[u\ v\ 1]^\top\), where \(K\) is the intrinsic matrix. Points are then 
+transformed into the robot frame via the known extrinsics. Color values are optionally associated to each 3D point for appearance--geometry fusion.
 
 To enhance downstream segmentation and localization, the raw cloud undergoes a processing pipeline:
 \begin{itemize}

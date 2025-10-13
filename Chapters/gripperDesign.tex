@@ -35,7 +35,8 @@ avoid bruising or buckling of the slender stem. To this end, the contact surface
 compliant, sponge-like pads that deform elastically, distributing pressure over a larger area and
 attenuating transient load peaks during closure. The applied normal force is limited to a target
 maximum of approximately 10\,N, which is adopted as a safe threshold for handling without damage
-based on empirical observations from preliminary trials.
+based on empirical observations from preliminary trials.All design CAD models for the finger and blade assemblies are 
+available at the link provided in the Appendix.
 
 To verify that these constraints are satisfied across expected geometric and material variability, the
 finger will be evaluated through a combination of quasi-static and dynamic analyses. The study will
@@ -55,7 +56,7 @@ profile is shown in Figure~\ref{fig:finger_torque}.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.75\textwidth]{fingerforceDynamics.png}
-    \caption{Computed finger joint torque over the grasping trajectory (100-step dynamic analysis).}
+    \caption{Simulated finger joint torque over the grasping trajectory for a 10\,N fingertip load (100-step dynamic analysis in Autodesk Inventor 2025).}
     \label{fig:finger_torque}
     \end{figure}
 
@@ -94,9 +95,9 @@ in the Appendix for reproducibility and implementation details.
 \section{End-Effector Fabrication and Assembly}
 
 This section documents the physical realization of the gripper and cutter. Printed parts were
-fabricated with fine layers for contact surfaces and higher infill for load-bearing features, then
-post-processed by drilling/reaming critical holes to final size. The figures below summarize key
-subassemblies and the final integration.
+fabricated with fine layers for contact surfaces and appropriate infill for load-bearing features, and post-processed to final 
+size. The figures below summarize key components and the final integration.
+
 
 
 \begin{table}[H]
@@ -135,21 +136,21 @@ severing during trials.
     \label{fig:finger_gears}
     \end{figure}
     
-    Figure~\ref{fig:finger_gears} depicts the printed spur-gear pair used to kinematically
-    synchronize the two fingers. The arrangement enforces equal and opposite angular motion,
-    yielding symmetric closing and reliable centering of the spear prior to cutting. Gear modules
-    and tooth counts were selected to balance compact packaging with adequate torque capacity;
-    backlash was minimized through post-processing of bores and the use of press-fit pins with
-    lubrication applied after assembly. This configuration reduces differential slip at the contacts
-    and improves repeatability of the grasping pose across cycles.
+Figure~\ref{fig:finger_gears} depicts the printed spur-gear pair used to kinematically
+synchronize the two fingers. The arrangement enforces equal and opposite angular motion,
+yielding symmetric closing and reliable centering of the spear prior to cutting. Gear modules
+and tooth counts were selected to balance compact packaging with adequate torque capacity;
+backlash was minimized through post-processing of bores by polishing and the use of chicago pins. 
+This configuration reduces differential slip at the contacts
+and improves repeatability of the grasping pose across cycles.
     
 
 \begin{figure}[H]
-\centering
-\includegraphics[width=0.75\textwidth]{Blade.jpg}
-\caption{Blade prototype for asparagus stem cutting.}
-\label{fig:blade}
-\end{figure}
+    \centering
+    \includegraphics[width=0.75\textwidth]{Blade.jpg}
+    \caption{Blade prototype for asparagus stem cutting.}
+    \label{fig:blade}
+    \end{figure}
 
 Figure~\ref{fig:blade} shows the replaceable utility blade secured within a low-mass carrier used
 for early trials. A standard trapezoidal blade was selected for availability, edge sharpness, and
@@ -167,8 +168,8 @@ durability, required stroke force, and the effect of blade orientation on cut qu
 Figure~\ref{fig:blade_driver_mount} illustrates the servo-driven blade mount. The blade carrier is
 coupled to a high-torque servo through a rigid hub and supported by bushings to constrain
 out-of-plane motion. The mount geometry establishes a repeatable attack angle relative to the
-stem and limits lateral compliance that could degrade cut quality. Cable routing and fastener
-access were considered to enable maintenance and rapid blade exchange during field operation.
+stem. Cable routing and fastener access were considered to enable maintenance and rapid blade exchange during 
+field operation.
 
 \begin{figure}[H]
 \centering
