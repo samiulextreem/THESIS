@@ -72,13 +72,15 @@ performance under varied backgrounds and illumination.}
  The laboratory configuration replicates typical field viewing geometry while providing controlled and repeatable imaging conditions. The camera is 
  rigidly mounted on an aluminum extrusion frame using a vibration-damped bracket, with the optical axis oriented obliquely toward the 
  crop bed at an incidence angle of approximately 25--35 degrees. The working distance is set such that a single frame covers the full 
- spear length from soil interface to tip with a 10--20\% margin, ensuring both context and sufficient pixel density for fine structures.
+ spear length from ground level interface to tip with a 10--20\% margin, ensuring both context and sufficient pixel density for fine structures.
+
+ Data for algorithm development and evaluation were acquired using an Intel RealSense D435 and an Orbbec Z200, both providing synchronized 
+ RGB--D measurements suitable for 3D geometric reasoning in addition to appearance cues.
 
  Intrinsic calibration (focal length, principal point, and lens distortion) is performed following a standard  procedure advised by 
  the manufacturer of the camera; extrinsic calibration to the robot base is obtained via hand--eye calibration with a fixed calibration
-  artifact placed at known locations within the workspace.  All transforms are stored and validated at the beginning of each session.
-
- Illumination is standardized using diffuse LED panels positioned to minimize specular highlights and cast shadows.
+artifact placed at known locations within the workspace.  All transforms are stored and validated at the beginning of each session.Illumination
+is standardized using diffuse LED panels positioned to minimize specular highlights and cast shadows.
 
  Image acquisition is configured at a constant resolution and frame rate suitable for downstream processing latency. A measurment tape is
  used  in the field of view for periodic verification of metric accuracy. All data are logged with session metadata (calibration parameters, lighting
@@ -86,33 +88,15 @@ performance under varied backgrounds and illumination.}
  and sample placement will be provided in this section.
 
 \section{cloud point generation and processing}
-Depth information is converted into a 3D point cloud through back-projection using the calibrated intrinsics. Each pixel with valid depth \(d\) at image 
-coordinates \((u, v)\) is mapped to a camera-frame point \(\mathbf{p}_c = d\,K^{-1}[u\ v\ 1]^\top\), where \(K\) is the intrinsic matrix. Points are then 
-transformed into the robot frame via the known extrinsics. Color values are optionally associated to each 3D point for appearance--geometry fusion.
 
-To enhance downstream segmentation and localization, the raw cloud undergoes a processing pipeline:
-\begin{itemize}
-  \item \textbf{Region-of-interest filtering}: Crop to the expected bed and height range to reduce irrelevant background.
-  \item \textbf{Downsampling}: Apply voxel-grid filtering to obtain approximately uniform density and lower computation.
-  \item \textbf{Ground removal}: Fit and subtract the soil plane using robust estimators (e.g., RANSAC) to isolate above-ground structures.
-  \item \textbf{Outlier suppression}: Remove statistical outliers based on neighborhood distances to improve surface smoothness.
-  \item \textbf{Normal estimation}: Compute local surface normals for geometric descriptors and later shape reasoning.
-\end{itemize}
-The resulting cloud provides a compact, denoised representation suitable for spear segmentation and 3D pose extraction.
+
+
+TODO  
+
 
 \section{segmentation}
-Segmentation partitions the sensed scene into spear and non-spear regions and, when required, separates individual spears (instance-level segmentation). Two 
-complementary strategies are considered depending on sensing modality and compute budget:
-\begin{enumerate}
-  \item \textbf{Geometry-first 3D segmentation}: Cluster the filtered point cloud using Euclidean or density-based methods, followed by geometric constraints on 
-  cluster height, thickness, and verticality to retain spear-like structures. This approach is robust to color variation and leverages ground-removed geometry.
-  \item \textbf{Learning-based image segmentation}: Apply a convolutional neural network for semantic or instance segmentation in 2D 
-  (e.g., encoder--decoder architectures). The 2D masks are lifted to 3D via the registered depth to obtain per-spear point sets. This approach captures 
-  fine visual cues and handles partial occlusions when sufficient training data are available.
-\end{enumerate}
 
-Post-processing includes morphological smoothing, non-maximum suppression for overlapping hypotheses, and temporal association across 
-frames when operating in motion. For each segmented spear, a 3D reference point (e.g., base point above soil or a cut point at a 
-specified height) is estimated by fitting a simple parametric model to the cluster and intersecting with the soil plane. The final 
-output is a set of target poses with confidence scores, which the planning module consumes for execution.
 
+
+
+TODO

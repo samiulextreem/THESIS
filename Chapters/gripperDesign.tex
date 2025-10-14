@@ -89,6 +89,24 @@ servo transients; the servo ground is tied to the ESP32 logic ground to ensure a
 for PWM signalling. Reference firmware and the associated GitHub repository link are provided
 in the Appendix for reproducibility and implementation details.
 
+In operation, the blade and finger actuators are commanded by the user through a lightweight
+human–in–the–loop interface that is available over both wired UART (USB serial) and Bluetooth
+Serial. The firmware accepts simple ASCII commands of the form \texttt{B <angle>} or
+\texttt{F <angle>}, where \texttt{B} targets the blade servo, \texttt{F} targets the finger servo, and
+\texttt{<angle>} denotes the desired set-point in degrees. For example, \texttt{B 45} positions the
+blade at 45\textdegree, while \texttt{F 50} sets the finger to 50\textdegree. Each command is parsed
+and acknowledged by the ESP32, and the corresponding RTOS task updates the actuator without
+blocking the other, ensuring responsive, decoupled control of grasping and cutting.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{Serial Bluetooth Terminal.jpg}
+    \caption{Serial/Bluetooth terminal during operation. The ESP32 reports task status while
+    commands such as \texttt{B 45} (blade) and \texttt{F 50} (finger) are issued by the user to set
+    servo angles in degrees.}
+    \label{fig:serial_terminal}
+\end{figure}
+
 
 
 
