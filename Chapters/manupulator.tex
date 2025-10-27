@@ -101,6 +101,59 @@ incremental motion is effected by STEP pulses. Microstepping is employed to achi
 control implementation details are provided in Appendix~A.
 
 
+\section{Power Consumption Analysis}
+
+Accurate estimation of power consumption is critical for agricultural field deployment, where the robot must operate autonomously for extended 
+periods between recharging cycles. To characterize the electrical power requirements of the manipulator, empirical measurements were acquired 
+using a current shunt and voltage sensor connected to each motor driver output, with data sampled at 10\,Hz during typical motion sequences. 
+The system operates at a supply voltage of 15\,V DC.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\linewidth]{pictures/pwr_motr1.png}
+\caption{Measured voltage, current, and power for Motor 1 (base joint with 30:1 gear reduction) during typical positioning motion. 
+Supply voltage is stable at 15\,V; current oscillates between 0.02\,A and 0.18\,A; instantaneous power varies from 0.3\,W to 2.7\,W.}
+\label{fig:pwr_motr1}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\linewidth]{pictures/pwr_motr2.png}
+\caption{Measured voltage, current, and power for Motor 2 (shoulder joint, direct drive) during typical positioning motion. 
+Supply voltage is stable at 15\,V; current oscillates between 0.01\,A and 0.20\,A; instantaneous power varies from 0.2\,W to 3.0\,W.}
+\label{fig:pwr_motr2}
+\end{figure}
+
+Figures~\ref{fig:pwr_motr1} and~\ref{fig:pwr_motr2} present the measured voltage, current, and instantaneous power for Motor~1 
+(base joint with 30:1 gear reduction) and Motor~2 (shoulder joint, direct drive) during representative positioning operations. 
+The experimental data reveal that actual power consumption is significantly lower than the motors' rated capacity, owing to the 
+microstepping driver's current modulation and the relatively light load imposed by the manipulator's kinematic design.
+
+The supply voltage remains stable at 15\,V DC across all operating conditions (variance $<$0.02\,V). Motor~1 exhibits a peak current 
+of 0.18\,A, yielding peak power $P_1^{\mathrm{peak}} \approx 2.7$\,W; the 30:1 gear reduction reduces the torque demand on the motor, 
+resulting in lower current draw compared to direct-drive configurations. Motor~2 shows a peak current of 0.20\,A, yielding peak power 
+$P_2^{\mathrm{peak}} \approx 3.0$\,W; the direct-drive configuration exhibits slightly higher current during motion but remains well 
+below rated capacity. Both current and power waveforms exhibit characteristic microstepping oscillations as the driver modulates phase 
+currents to produce smooth incremental motion. The oscillation frequency corresponds to the step rate commanded during motion segments.
+
+Time-averaged power during continuous motion (computed over the recorded samples) is approximately 1.2--1.5\,W for Motor~1 and 
+1.3--1.6\,W for Motor~2. During holding (motor energized but stationary), current drops to approximately 0.03--0.05\,A, 
+corresponding to a holding power of 0.5--0.8\,W per motor. Auxiliary electronics (Arduino Nano microcontrollers, voltage regulators, 
+communication modules) collectively consume an estimated 1.5--2.0\,W under nominal conditions. Based on these measurements, the 
+manipulator exhibits remarkably low power requirements during typical operation, with peak transient power consumption below 10\,W 
+and time-averaged power below 5\,W.
+
+For extended field deployment, a conservative energy budget estimate assumes an 8-hour work shift with the robot operating 
+continuously in idle or active harvesting mode. Using the measured time-averaged power of approximately 4--5\,W for typical operation, 
+the total energy requirement is approximately $E_{\mathrm{total}} \approx 5\,\mathrm{W} \times 8\,\mathrm{h} = 40$\,W$\cdot$h. To account 
+for power supply conversion inefficiencies (85--90\% for DC-DC converters and stepper drivers), environmental effects (temperature-dependent 
+battery capacity degradation, voltage sag under load), and battery aging (capacity fade over charge cycles), a recommended battery capacity 
+of 50--60\,W$\cdot$h is specified. A 15\,V, 3.5\,A\,h lithium-ion battery pack (nominal capacity 52.5\,W\,h) or a 12\,V, 5\,A\,h 
+lithium-polymer pack (60\,W\,h) satisfies this requirement while maintaining compatibility with the measured 15\,V supply voltage and 
+providing adequate margin for adverse conditions. 
+
+
+
 \section{Bill of Materials}
 
 The bill of materials enumerates key mechanical and electrical components that satisfy the derived specifications while maintaining
