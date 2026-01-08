@@ -1,9 +1,136 @@
 \chapter{Experiments}
-This chapter details the empirical evaluation of the perception and manipulation pipeline in both benchtop and integrated robot settings. 
-Our objectives are to: (i) verify that the trained detector produces reliable, actionable targets; (ii) validate the grasping and 
-cutting strategy on representative specimens; and (iii) quantify end-to-end performance under realistic operating conditions.
+
+\section{Arm Calibration}
+This section details the calibration process undertaken to validate the robotic
+arm's positional accuracy and the correctness of the inverse kinematics solver.
+The primary objective is to verify that the robotic arm functions as intended,
+specifically checking whether the arm can accurately traverse to a set of desired Cartesian poses (position and orientation) within its workspace. This validation is essential to bridge the gap between the theoretical kinematic model and the physical reality of the constructed manipulator. Discrepancies often arise due to factors such as manufacturing tolerances in 3D-printed components, assembly variances, and potential backlash in gear reductions. Consequently, the theoretical mapping from joint angles to Cartesian coordinates must be validated to ensure reliable operation and precise motion control.
+
+The calibration methodology involves a systematic "pose-check" routine. First, a set of target Cartesian 
+coordinates $(x, y, z)$ distributed throughout the manipulator's reachable workspace are defined in the control software. 
+Second, the Inverse Kinematics (IK) solver processes these targets to compute the required joint 
+angles ($\theta_1, \theta_2, \dots$) necessary to achieve the desired end-effector position. Third, these angular 
+values are converted into discrete motor steps and transmitted to the actuators to drive the physical arm. Finally, 
+the actual resulting pose of the end-effector is visually and physically inspected against the calculated projection. 
+This allows for the verification of link lengths and joint offsets in the software model, ensuring the physical motion 
+aligns with the calculated trajectory. The implementation of the inverse kinematics solver and the associated calibration 
+routines are available in the project's source code repository \cite{robotarmrepo}. As shown in the following images, all 
+pose and accuracy checks were successfully passed. The visual comparison confirms that the physical arm accurately 
+replicates the calculated poses derived from the kinematic model.
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \reflectbox{\includegraphics[width=\textwidth]{pictures/pose_1.jpg}}
+        \caption{Real Robot Pose 1}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{pictures/pose_mt_1.png}
+        \caption{Calculated Pose 1}
+    \end{minipage}
+    \caption{Comparison of Real vs Calculated Pose 1}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \reflectbox{\includegraphics[width=\textwidth]{pictures/pose_2.jpg}}
+        \caption{Real Robot Pose 2}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{pictures/pose_mt_2.png}
+        \caption{Calculated Pose 2}
+    \end{minipage}
+    \caption{Comparison of Real vs Calculated Pose 2}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \reflectbox{\includegraphics[angle=-90, width=\textwidth]{pictures/pose_3.jpg}}
+        \caption{Real Robot Pose 3}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{pictures/pose_mt_3.png}
+        \caption{Calculated Pose 3}
+    \end{minipage}
+    \caption{Comparison of Real vs Calculated Pose 3}
+\end{figure}
+
+\section{End-to-End Target Acquisition}
+This experiment evaluates the integrated system's ability to autonomously detect, localize, and 
+approach a specific target in a simulated harvesting scenario. The process combines the computer 
+vision pipeline described in Chapter 6 with the validated kinematic control system.
+
+The procedure commences with the synchronous acquisition of raw RGB imagery and depth data, 
+which is  structured into a 3D point cloud in ply formate. To facilitate target resolution, this 
+volumetric data is projected onto a 2D image plane as shown on chapter 6.4 . Following this, the trained neural network 
+performs instance segmentation using out trained model on the RGB frame as outlined on chapter 6.2,
+yielding a binary mask that delineates the 
+target morphology. This mask is then superimposed onto the 2D projection, enabling the isolation 
+of relevant pixels. By leveraging the established spatial correspondence between the 2D 
+projection and the original 3D data, the system effectively back-projects the segmented 
+region to retrieve the specific 3D coordinates associated with the target object. Crucially, this 2D mask is then used to filter the original 3D dataset. By projecting the mask 
+boundaries back into the 3D space, the system segments the specific subset of points belonging 
+to the target object, effectively isolating it from the background and surrounding clutter. 
 
 
+
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{pictures/subject_image.png}
+        \caption{Raw RGB}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{pictures/filled_image.png}
+        \caption{2D Projection}
+    \end{minipage}
+    \caption{Comparison of the acquired RGB imagery and the corresponding 2D representation derived from the 3D point cloud.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{pictures/mask_segmented.png}
+    \caption{Binary segmentation mask generated by the neural network.}
+\end{figure}
+
+
+
+From this isolated point cloud, the centroid coordinates are computed to determine the precise 3D 
+grasping target. These coordinates are finally passed to the inverse kinematics solver, which 
+drives the robot arm to the calculated position, completing the acquisition cycle.
+
+
+
+
+
+\section{Harvesting Cycle Execution}
+Following the successful acquisition of target coordinates, the system executes a multi-stage 
+physical harvesting routine. This cycle is designed to ensure safe interaction with the crop 
+and reliable detachment.
+
+The operation sequence commences with an approach phase where the robot arm moves to 
+a "pre-grasp" waypoint, defined with a 15 cm safety offset from the calculated target location. 
+This offset prevents accidental collisions during the primary transit move. Subsequently, the 
+arm executes a linear approach, closing the 15 cm distance at a controlled speed to reach the 
+final interaction point. Once positioned, the gripper is closed to secure the target spear, 
+followed by the activation of the cutting mechanism to sever the stalk. Upon completion of the 
+cut, the manipulator retracts to a neutral "stand-up" home pose, effectively extracting the 
+harvested produce from the workspace and resetting the system for the next operation.
 
 
 

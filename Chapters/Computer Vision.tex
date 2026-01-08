@@ -2,7 +2,7 @@
 \section{Requirements of objective}
 Automated asparagus harvesting necessitates reliable perception to locate, assess, and safely manipulate spears within complex 
 field conditions. Computer vision provides the sensing and interpretation capabilities required to: (i) detect spears amidst 
-cluttered foliage and soil background; (ii) estimate cut-readiness based on geometric and visual cues i.e length, thickness, tip morphology; (iii) 
+cluttered foliage and soil background; (ii) estimate cut-readiness based on geometric and visual cues i.e., length, thickness, tip morphology; (iii) 
 localize targets in three dimensions for tool approach and cutting; and (iv) operate robustly under variability in 
 illumination, occlusions, plant morphology, and weather. In this context, perception performance directly constrains the 
 achievable throughput, product quality, and operational safety of the harvesting system.
@@ -53,14 +53,14 @@ initialized from COCO-pretrained weights. No validation dataset is attached to t
 \end{figure}
 
 
-After training, the model is exported as a TorchScript artifact for deployment and used for inference on the held-out test split. A confidence
+After training, the model is exported as a TorchScript artifact in Google Colab with PyTorch framework for deployment and used for inference on the test split. A confidence
 threshold of 0.85 is applied for instance selection. On the test dataset, the model achieves an overall detection accuracy above 98.4\%.
 Representative qualitative results are shown in Figure~\ref{fig:inference_results}.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.48\linewidth]{test_image.png}\hfill
-\includegraphics[width=0.48\linewidth]{\detokenize{test_image (2).png}}
+\includegraphics[width=0.48\linewidth]{test_image (2).png}
 \caption{Qualitative inference results on held-out test images. Detected asparagus spears are shown with instance masks and bounding boxes, illustrating robust 
 performance under varied backgrounds and illumination.}
 \label{fig:inference_results}
@@ -82,21 +82,109 @@ performance under varied backgrounds and illumination.}
 artifact placed at known locations within the workspace.  All transforms are stored and validated at the beginning of each session.Illumination
 is standardized using diffuse LED panels positioned to minimize specular highlights and cast shadows.
 
- Image acquisition is configured at a constant resolution and frame rate suitable for downstream processing latency. A measurment tape is
+ Image acquisition is configured at a constant resolution and frame rate suitable for downstream processing latency. A measurement tape is
  used  in the field of view for periodic verification of metric accuracy. All data are logged with session metadata (calibration parameters, lighting
- settings, and environmental notes) to enable reproducibility. A figure illustrating the physical arrangement of the camera, lighting,
- and sample placement will be provided in this section.
+ settings, and environmental notes) to enable reproducibility.
 
-\section{cloud point generation and processing}
+The Intel RealSense D435 is a compact RGB-D camera designed for robotics and computer vision applications. It features a stereo depth sensor capable of capturing depth information up to 10 meters with a resolution of 1280x720 pixels at 30 FPS. The camera integrates an RGB sensor for color imaging and an IMU for motion tracking, providing synchronized RGB-D data streams. Its small form factor and USB connectivity make it ideal for integration into robotic systems, offering robust performance in various lighting conditions.
+
+The Orbbec Astra is another RGB-D camera used in the setup, providing reliable depth sensing through structured light technology. It offers a depth resolution of 640x480 pixels at 30 FPS, with a range up to 8 meters. The camera includes an RGB module for color data and supports plug-and-play operation via USB, suitable for applications requiring 3D perception in indoor and outdoor environments. The Orbbec Astra was primarily used for data generation in this study, providing the main RGB-D streams for point cloud processing and segmentation tasks.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.45\textwidth]{intel_realsense d435 camera.png}
+    \caption{Intel RealSense D435 RGB-D camera used in the laboratory setup.}
+    \label{fig:intel_realsense}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.45\textwidth]{Astra SUB s 3.jpg}
+    \caption{Orbbec Astra RGB-D camera integrated into the vision system.}
+    \label{fig:orbbec_astra}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.45\textwidth]{camera_lab_setup.png}
+    \caption{Orbbec camera positioned near the robot base arm.}
+    \label{fig:camera_base_mount}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[angle=0, width=0.5\textwidth]{pictures/cam_setup_front view.jpg}
+    \caption{Front view of the experimental setup showing the camera and target asparagus.}
+    \label{fig:cam_setup_front}
+\end{figure}
+
+
+The physical arrangement of the cameras, lighting, and sample placement is illustrated in the figures above, 
+demonstrating the controlled environment for data acquisition.
+
+\section{cloud point processing}
+
+This section presents the point cloud generation and processing methodology employed to transform raw RGB-D data 
+from the Orbbec Astra camera into structured 3D representations suitable for asparagus spear detection and 
+localization. The primary objective is to bridge the gap between 2D image-based segmentation and 3D geometric 
+reasoning, enabling precise robotic manipulation in cluttered agricultural environments. This processing of 3D 
+projection to 2D projection is necessary to enable reasoning on the 2D image and subsequently refer back to 3D 
+space based on the 2D image analysis, allowing the robot to take action.
+By processing point clouds, the system achieves centimeter-level accuracy in pose estimation, which is 
+essential for safe and effective harvesting operations.
+
+The implemented pipeline, developed in Python using the Open3D and OpenCV libraries, consists of five 
+sequential stages designed for robustness and computational efficiency. The complete source code for 
+this implementation is available online \cite{cloudprocessor}. These stages are detailed as follows:
+
+\begin{enumerate}
+    \item \textbf{Parameter Loading}: Camera intrinsic parameters, including focal lengths ($f_x, f_y$), principal points ($c_x, c_y$), and image dimensions, are loaded from a configuration file. These parameters are scaled to align with the resolution required for fine-grained analysis.
+    
+    \item \textbf{Point Cloud Ingestion}: The raw 3D data is ingested as a PLY-formatted point cloud. This data structure contains the spatial geometry and color information of the scene.
+    
+    \item \textbf{Unit Standardization}: Coordinate units within the point cloud are normalized to meters. This standardization is crucial for ensuring consistent metric computations and compatibility with the robot's physical workspace.
+    
+    \item \textbf{3D-to-2D Projection}: Each vertex in the point cloud is mapped onto the 2D image plane using the pinhole camera model:
+    \[
+    u = \frac{f_x \cdot x}{z} + c_x, \quad v = \frac{f_y \cdot y}{z} + c_y
+    \]
+    where $(x, y, z)$ denote the 3D coordinates and $(u, v)$ are the resultant pixel coordinates.
+    
+    \item \textbf{Hole-Filling (Inpainting)}: Spatial discontinuities in the projected image, caused by the discrete nature of the point cloud, are addressed using OpenCV's inpainting technique. The Telea algorithm is employed to interpolate missing pixel values based on the surrounding texture, producing a seamless and continuous color image.
+\end{enumerate}
+
+To validate the efficacy and robustness of the proposed pipeline, the method was evaluated 
+across a diverse set of samples. The sequential processing stages are illustrated in the 
+following figures. Figure \ref{fig:3d_point_cloud} depicts the raw 3D point cloud data acquired 
+from the Orbbec Astra camera, which serves as the primary input for geometric reasoning.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.48\textwidth]{3d_view_1.png}\hfill
+    \includegraphics[width=0.48\textwidth]{3d_view_2.png}\\[0.5em]
+    \centering
+    \includegraphics[width=0.6\textwidth]{3d_view_3.png}
+    \caption{3D point cloud data visualized from different perspectives.}
+    \label{fig:3d_point_cloud}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.48\textwidth]{subject_image.png}\hfill
+    \includegraphics[width=0.48\textwidth]{filled_image.png}
+    \caption{Left: The 2D projection of the target subject. Right: The result of hole-filling to produce a seamless color image.}
+    \label{fig:processing_steps}
+\end{figure}
+
+The resulting reconstructed image provides a continuous and robust 2D representation of the scene, 
+effectively mitigating the sparsity inherent in the raw projection. This reconstruction quality 
+is critical for the harvesting application, as it preserves essential object boundaries and visual 
+features necessary for precise detection and readiness assessment. Consequently, the processed 
+output supports reliable downstream decision-making and robotic manipulation.
 
 
 
-TODO  
-
-
-\section{segmentation}
 
 
 
 
-TODO
