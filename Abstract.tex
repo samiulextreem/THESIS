@@ -1,5 +1,20 @@
  \chapter*{\textbf{Abstract}}
+The agricultural sector faces a critical labor shortage, particularly in the harvesting of delicate crops like green asparagus, which requires selective picking and labor-intensive manual handling. This thesis presents the design, development, and validation of an autonomous harvesting framework aimed at addressing this challenge. As a proof of concept, the system integrates a custom-built planar robotic arm which serves as a testbed for evaluating the robustness and precision of the computer vision and control algorithms.
 
-Set the story, insert short abstract of the thesis (1 page).
+The system's core intelligence relies on a robust computer vision pipeline that 
+combines deep learning with 3D spatial analysis. A Mask R-CNN model is employed 
+for instance segmentation to identify asparagus spears from RGB imagery, while 
+3D data is projected onto 2D space to establish a unified spatial reference frame that streamlines computational workflows. Leveraging the segmentation 
+masks generated from the RGB imagery, the system achieves precise isolation and localization of the asparagus 
+targets. These 2D detections are subsequently transformed into 3D spatial coordinates, facilitating accurate 
+kinematic targeting for the robotic manipulator to execute its reach and operation tasks.
 
-Don’t forget to read the university guidelines and respect all the deadlines (assignment module, graduation date and registration, thesis deadline etc.)!
+A hybrid control architecture coordinates the operation, with high-level Python 
+software performing inverse kinematics and path planning, and distributed 
+Arduino microcontrollers executing real-time actuator control via low-level 
+firmware. Experimental validation, conducted in a controlled laboratory 
+environment with the planar manipulator, confirmed the effectiveness of the 
+vision system. The results demonstrate the system's ability to consistently 
+identify and reach target locations, validating the proposed computational 
+framework as a foundation for future field-deployable agricultural robots.
+

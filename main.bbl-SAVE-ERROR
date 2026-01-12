@@ -218,6 +218,39 @@
       \verb https://www.freshplaza.com/article/9098765/higher-level-of-automation-leads-to-better-asparagus-product-quality/
       \endverb
     \endentry
+    \entry{harvestingdemo}{misc}{}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=4145658539684f176c8453419b87d3f8}{%
+           family={HAQUE},
+           familyi={H\bibinitperiod},
+           given={Samiul},
+           giveni={S\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{4145658539684f176c8453419b87d3f8}
+      \strng{fullhash}{4145658539684f176c8453419b87d3f8}
+      \strng{fullhashraw}{4145658539684f176c8453419b87d3f8}
+      \strng{bibnamehash}{4145658539684f176c8453419b87d3f8}
+      \strng{authorbibnamehash}{4145658539684f176c8453419b87d3f8}
+      \strng{authornamehash}{4145658539684f176c8453419b87d3f8}
+      \strng{authorfullhash}{4145658539684f176c8453419b87d3f8}
+      \strng{authorfullhashraw}{4145658539684f176c8453419b87d3f8}
+      \field{sortinit}{H}
+      \field{sortinithash}{23a3aa7c24e56cfa16945d55545109b5}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{Accessed: 20-Mar-2025}
+      \field{title}{Autonomous Asparagus Harvesting Demo}
+      \field{year}{2025}
+      \verb{urlraw}
+      \verb https://youtu.be/irxiFyBaTXY
+      \endverb
+      \verb{url}
+      \verb https://youtu.be/irxiFyBaTXY
+      \endverb
+    \endentry
     \entry{DeereCES2025}{misc}{}{}
       \name{author}{1}{}{%
         {{un=0,uniquepart=base,hash=db531ca9a662c59f412e71eed2432bf4}{%
@@ -880,6 +913,68 @@
       \field{year}{2017}
       \field{pages}{266\bibrangedash 275}
       \range{pages}{10}
+    \endentry
+    \entry{cloudprocessor}{misc}{}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=2b3bf5e489fd54aafb82939faf60cb63}{%
+           family={Samiul},
+           familyi={S\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {GitHub}%
+      }
+      \strng{namehash}{2b3bf5e489fd54aafb82939faf60cb63}
+      \strng{fullhash}{2b3bf5e489fd54aafb82939faf60cb63}
+      \strng{fullhashraw}{2b3bf5e489fd54aafb82939faf60cb63}
+      \strng{bibnamehash}{2b3bf5e489fd54aafb82939faf60cb63}
+      \strng{authorbibnamehash}{2b3bf5e489fd54aafb82939faf60cb63}
+      \strng{authornamehash}{2b3bf5e489fd54aafb82939faf60cb63}
+      \strng{authorfullhash}{2b3bf5e489fd54aafb82939faf60cb63}
+      \strng{authorfullhashraw}{2b3bf5e489fd54aafb82939faf60cb63}
+      \field{extraname}{1}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{extradate}{1}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{howpublished}{\url{https://github.com/samiulextreem/CLOUDPROCESSOR}}
+      \field{journaltitle}{GitHub repository}
+      \field{note}{Accessed: 2026-01-08}
+      \field{title}{{CLOUDPROCESSOR}: Point Cloud Processing Pipeline}
+      \field{year}{2026}
+    \endentry
+    \entry{robotarmrepo}{misc}{}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=2b3bf5e489fd54aafb82939faf60cb63}{%
+           family={Samiul},
+           familyi={S\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {GitHub}%
+      }
+      \strng{namehash}{2b3bf5e489fd54aafb82939faf60cb63}
+      \strng{fullhash}{2b3bf5e489fd54aafb82939faf60cb63}
+      \strng{fullhashraw}{2b3bf5e489fd54aafb82939faf60cb63}
+      \strng{bibnamehash}{2b3bf5e489fd54aafb82939faf60cb63}
+      \strng{authorbibnamehash}{2b3bf5e489fd54aafb82939faf60cb63}
+      \strng{authornamehash}{2b3bf5e489fd54aafb82939faf60cb63}
+      \strng{authorfullhash}{2b3bf5e489fd54aafb82939faf60cb63}
+      \strng{authorfullhashraw}{2b3bf5e489fd54aafb82939faf60cb63}
+      \field{extraname}{2}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{extradate}{2}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{howpublished}{\url{https://github.com/samiulextreem/ROBOT_ARM}}
+      \field{journaltitle}{GitHub repository}
+      \field{note}{Accessed: 2026-01-08}
+      \field{title}{{ROBOT\_ARM}: Robotic Arm Control and Calibration}
+      \field{year}{2026}
     \endentry
     \entry{mdpi2023mobile}{article}{}{}
       \name{author}{3}{}{%

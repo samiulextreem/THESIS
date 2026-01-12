@@ -5,8 +5,1650 @@
 
 The following links provide additional resources referenced in the thesis:
 
-- CAD models for the finger and blade assemblies: [Insert link here if available]
-- GitHub repository for the reference firmware: [Insert link here if available]
-- Video demonstration of the gripper in operation: \url{https://uniroma2-my.sharepoint.com/personal/samiul_haque_students_uniroma2_eu/_layouts/15/stream.aspx?id=%2Fpersonal%2Fsamiul%5Fhaque%5Fstudents%5Funiroma2%5Feu%2FDocuments%2FMicrosoft%20Teams%20Chat%20Files%2F20240910%5F173554%2Emp4&referrer=StreamWebApp%2EWeb&referrerScenario=AddressBarCopied%2Eview%2E7daf0913%2Db86d%2D47f5%2Db147%2Df61d74bb6397}
-- Intel RealSense D435 camera: \url{https://www.intelrealsense.com/depth-camera-d435/}
-- Orbbec Astra camera: \url{https://orbbec.com/products/astra/}
+\begin{itemize}
+    \item CAD models for the finger and blade assemblies: \url{https://github.com/samiulextreem/CLOUDPROCESSOR}
+    \item GitHub repository for the reference firmware: \url{https://github.com/samiulextreem/ROBOT_ARM}
+    \item Video demonstration of the gripper in operation: \url{https://uniroma2-my.sharepoint.com/personal/samiul_haque_students_uniroma2_eu/_layouts/15/stream.aspx?id=%2Fpersonal%2Fsamiul%5Fhaque%5Fstudents%5Funiroma2%5Feu%2FDocuments%2FMicrosoft%20Teams%20Chat%20Files%2F20240910%5F173554%2Emp4&referrer=StreamWebApp%2EWeb&referrerScenario=AddressBarCopied%2Eview%2E7daf0913%2Db86d%2D47f5%2Db147%2Df61d74bb6397}
+    \item Intel RealSense D435 camera: \url{https://www.intelrealsense.com/depth-camera-d435/}
+    \item Orbbec Astra camera: \url{https://orbbec.com/products/astra/}
+\end{itemize}
+
+\section{NEMA 17 Motor Specifications}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{pictures/nema17_1.png}
+    \caption{NEMA 17 Specification Sheet 1}
+    \label{fig:nema17_1}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{pictures/nema17_2.png}
+    \caption{NEMA 17 Specification Sheet 2}
+    \label{fig:nema17_2}
+\end{figure}
+
+\section{Specification of Harmonic Drive 30:1}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{pictures/drive_1.png}
+    \caption{Harmonic Drive 30:1 Specification Sheet 1}
+    \label{fig:drive_1}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{pictures/drive_2.png}
+    \caption{Harmonic Drive 30:1 Specification Sheet 2}
+    \label{fig:drive_2}
+\end{figure}
+
+\section{Pinout and Specification of Arduino Nano}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{pictures/Pinout-NANO_latest.png}
+    \caption{Arduino Nano Pinout and Specifications}
+    \label{fig:arduino_nano_pinout}
+\end{figure}
+
+\section{3D Printed Asparagus Model}
+
+The print-ready models for the asparagus test subjects can be found at: \url{https://github.com/samiulextreem/CLOUDPROCESSOR}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{pictures/asp_3d_1.png}
+    \caption{3D Printed Asparagus Model 1}
+    \label{fig:asp_3d_1}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{pictures/asp_3d_2.png}
+    \caption{3D Printed Asparagus Model 2 }
+    \label{fig:asp_3d_2}
+\end{figure}
+\section{CloudProcessor Repository Structure}
+
+The following file tree illustrates the organization of the \textit{CLOUDPROCESSOR} repository, showing the main executable scripts, utility modules for computer vision, and the dataset directory structure.
+
+\begin{verbatim}
+CLOUDPROCESSOR/
+|-- asp_model/                  # 3D models files (.fpp, .stl)
+|-- astra_sample/               # Sample output images
+|-- dataset/                    # Dataset folder
+|-- detectron2/                 # Detectron2 library folder
+|-- output/                     # Output logs and event files
+|-- utilities/                  # Helper scripts and notebooks
+|   |-- asparagus_detector.py
+|   |-- asperagas_detection.ipynb
+|   |-- filteredmask.py
+|   |-- focal_length_tuning.ipynb
+|   |-- position_verification.py
+|   `-- ... (calibration images)
+|-- 3d_projection.py            # Main projection logic
+|-- astra_config.ini            # Configuration for Astra camera
+|-- average_position.py         # Script for position averaging
+|-- file_fetcher.py             # Utility to fetch files
+|-- filteredmask.py             # Mask filtering logic
+|-- main.py                     # Entry point of the application
+|-- open3d_viewer.py            # Visualization script
+|-- README.md                   # Project documentation
+`-- requirements.txt            # Python dependencies
+\end{verbatim}
+
+\section{Main Application Code}
+
+The following listing contains the core logic from \texttt{main.py} responsible for  part of the vision  sequence.
+
+\begin{lstlisting}[language=Python, caption={Main processing algorithm}, label={lst:mainCode}]
+#!/usr/bin/env python3
+"""
+Astra Point Cloud Processing Pipeline - Main Entry Point
+Processes Astra camera data: 3D projection, masking, and position averaging.
+"""
+
+import sys
+import os
+import glob
+import numpy as np
+import open3d as o3d
+import matplotlib.pyplot as plt
+import configparser
+import cv2
+
+def main():
+    """Run the complete Astra point cloud processing pipeline"""
+    print("Astra Point Cloud Processing Pipeline")
+    print("=" * 50)
+    
+    # Stage 1: Setup and configuration
+    print("Stage 1: Loading configuration and data")
+    folder = 'astra_sample'
+    output_dir = 'output'
+    os.makedirs(output_dir, exist_ok=True)
+    
+    # Read camera config
+    config = configparser.ConfigParser()
+    config.read('astra_config.ini')
+    scale = 4  # Scale factor for higher resolution
+    fx = float(config['ColorIntrinsic']['fx']) * scale  # Focal length in pixels
+    fy = float(config['ColorIntrinsic']['fy']) * scale
+    cx = float(config['ColorIntrinsic']['cx']) * scale
+    cy = float(config['ColorIntrinsic']['cy']) * scale
+    width = int(config['ColorIntrinsic']['width']) * scale
+    height = int(config['ColorIntrinsic']['height']) * scale
+    print("[OK] Camera intrinsics loaded")
+    
+    # Find PLY file
+    ply_files = glob.glob(os.path.join(folder, '*.ply'))
+    if not ply_files:
+        print("[ERROR] No PLY file found in astra_sample/")
+        return False
+    ply_file = ply_files[0]
+    print(f"[OK] Found PLY file: {ply_file}")
+    
+    # Stage 2: Load and preprocess point cloud
+    print("\n[INFO] Stage 2: Loading and preprocessing point cloud")
+    pcd = o3d.io.read_point_cloud(ply_file)
+    points = np.asarray(pcd.points) / 1000.0  # Convert mm to meters
+    colors = np.asarray(pcd.colors) * 255  # Assuming colors are in [0,1]
+    print(f"[OK] Loaded {len(points)} points, converted to meters")
+    
+    # Stage 3: Project to 2D
+    print("\n[INFO] Stage 3: Projecting 3D points to 2D image")
+    depth_image = np.full((height, width), np.inf)
+    color_image = np.zeros((height, width, 3), dtype=np.uint8)
+    
+    for i, (x, y, z) in enumerate(points):
+        if z > 0:
+            u = int(fx * x / z + cx)
+            v = int(fy * y / z + cy)
+            if 0 <= u < width and 0 <= v < height:
+                if z < depth_image[v, u]:
+                    depth_image[v, u] = z
+                    color_image[v, u] = colors[i]
+    
+    valid_depths = depth_image[depth_image < np.inf]
+    print(f"[OK] Projected {len(valid_depths)} valid points to 2D")
+    print(f"   Depth range: {np.min(valid_depths)*1000:.0f} - {np.max(valid_depths)*1000:.0f} mm")
+    
+    # Stage 4: Fill holes and save filled image
+    print("\n[INFO] Stage 4: Filling holes in projected image")
+    mask_img = np.all(color_image == 0, axis=2).astype(np.uint8)
+    color_image = cv2.inpaint(color_image, mask_img, 3, cv2.INPAINT_TELEA)
+    cv2.imwrite(os.path.join(output_dir, 'filled_image.png'), color_image)
+    print("[OK] Holes filled, saved filled_image.png")
+    
+    # Stage 5: Apply mask
+    print("\n[INFO] Stage 5: Applying segmentation mask")
+    mask_filename = 'mask_segmented.png'  # Default mask
+    mask_path = os.path.join(folder, mask_filename)
+    mask = cv2.imread(mask_path, cv2.IMREAD_GRAYSCALE)
+    if mask is None:
+        print(f"[ERROR] Mask {mask_filename} not found")
+        return False
+    mask = cv2.resize(mask, (width, height), interpolation=cv2.INTER_NEAREST)
+    white_pixels = np.sum(mask > 0)
+    print(f"[OK] Loaded mask with {white_pixels} white pixels")
+    
+    color_image = cv2.bitwise_and(color_image, color_image, mask=mask)
+    cv2.imwrite(os.path.join(output_dir, 'masked_image.png'), color_image)
+    print("[OK] Mask applied, saved masked_image.png")
+    
+    # Stage 6: Deproject to 3D point cloud
+    print("\n[INFO] Stage 6: Deprojecting to 3D point cloud")
+    points_3d = []
+    colors_3d = []
+    for v in range(height):
+        for u in range(width):
+            if mask[v, u] > 0 and depth_image[v, u] < np.inf:
+                z = depth_image[v, u]
+                x = (u - cx) * z / fx
+                y = (v - cy) * z / fy
+                points_3d.append([x, y, z])
+                colors_3d.append(color_image[v, u] / 255.0)
+    
+    pcd_projected = o3d.geometry.PointCloud()
+    pcd_projected.points = o3d.utility.Vector3dVector(points_3d)
+    pcd_projected.colors = o3d.utility.Vector3dVector(colors_3d)
+    print(f"[OK] Created point cloud with {len(points_3d)} points")
+    
+    o3d.io.write_point_cloud(os.path.join(output_dir, "filtered_pointcloud.ply"), pcd_projected, write_ascii=True)
+    print("[OK] Saved filtered_pointcloud.ply")
+    
+    # Stage 7: Save final 2D projection
+    print("\n[INFO] Stage 7: Saving final 2D projection")
+    plt.imshow(color_image)
+    plt.title('2D Projection of Astra PLY Point Cloud')
+    plt.axis('off')
+    plt.savefig(os.path.join(output_dir, 'projected_image.png'))
+    plt.close()
+    print("[OK] Saved projected_image.png")
+    
+    # Stage 8: Calculate average position
+    print("\n[INFO] Stage 8: Calculating average position")
+    if len(points_3d) > 0:
+        points_array = np.array(points_3d)
+        avg_x = np.mean(points_array[:, 0]) * 1000
+        avg_y = np.mean(points_array[:, 1]) * 1000
+        avg_z = np.mean(points_array[:, 2]) * 1000
+        print(f"[OK] Average position: X={avg_x:.3f} mm, Y={avg_y:.3f} mm, Z={avg_z:.3f} mm")
+        print(f"   Total points: {len(points_3d)}")
+    else:
+        print("[ERROR] No points in the final point cloud")
+        return False
+    
+    # Final summary
+    print("\n[SUCCESS] Astra Pipeline Completed Successfully!")
+    print("=" * 50)
+    print("Output files in 'output/' directory:")
+    output_files = ['filled_image.png', 'masked_image.png', 'projected_image.png', 'filtered_pointcloud.ply']
+    for file in output_files:
+        path = os.path.join(output_dir, file)
+        if os.path.exists(path):
+            size = os.path.getsize(path) / 1024
+            print(f"   [OK] {file} ({size:.1f} KB)")
+    
+    return True
+
+if __name__ == "__main__":
+    success = main()
+    sys.exit(0 if success else 1)
+\end{lstlisting}
+
+\section{Training and Segmentation Code}
+
+The following listing contains the code used for training the Mask R-CNN model and performing instance segmentation.
+
+\begin{lstlisting}[language=Python, caption={Training and Segmentation Logic}, label={lst:trainingCode}]
+#!/usr/bin/env python3
+"""
+Asparagus Detection Module
+-------------------------
+A production-ready module for detecting asparagus in images using a pre-trained Mask R-CNN model.
+
+This module provides a class-based and function-based interface for detecting asparagus in images.
+It can be used as a standalone command-line tool or imported as a library in other Python scripts.
+
+Example usage as a module:
+    from asparagus_detector import AsparagusDetector, detect_asparagus
+    
+    # Class-based interface
+    detector = AsparagusDetector()
+    results = detector.detect('image.png', save_results=True)
+    
+    # Function-based interface (backward compatible)
+    results = detect_asparagus('image.png')
+
+Example usage as a command-line tool:
+    python asparagus_detector.py --image image.png --output ./results --threshold 0.7
+"""
+
+import os
+import sys
+import cv2
+import numpy as np
+import torch
+import argparse
+import logging
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+
+# Add detectron2 to path if needed
+DETECTRON2_PATH = os.path.abspath('../detectron2')
+if os.path.exists(DETECTRON2_PATH) and DETECTRON2_PATH not in sys.path:
+    sys.path.insert(0, DETECTRON2_PATH)
+
+# Detectron2 imports
+import detectron2
+from detectron2.config import get_cfg
+from detectron2.engine import DefaultPredictor
+from detectron2.utils.visualizer import Visualizer
+from detectron2 import model_zoo
+
+# Make sure CUDA is available or fallback to CPU
+DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
+
+class AsparagusDetector:
+    """
+    Class to detect asparagus in images using Mask R-CNN.
+    """
+    
+    def __init__(self, model_path=None, confidence_threshold=0.7, device=None, select_best_only=True):
+        """
+        Initialize the asparagus detector.
+        
+        Creates an instance of the AsparagusDetector class with the specified parameters.
+        The detector is configured with a Mask R-CNN model specifically trained for
+        asparagus detection.
+        
+        Args:
+            model_path (str): Path to model weights file. If None, uses default path
+                             in 'output/model_final.pth'.
+            confidence_threshold (float): Detection confidence threshold (0-1).
+                                         Higher values reduce false positives but may
+                                         miss some objects. Default: 0.7
+            device (str): Device to use for inference ('cuda' or 'cpu').
+                         If None, uses CUDA if available, otherwise CPU.
+            select_best_only (bool): If True, only returns the highest scoring detection.
+                                   If False, returns all detections above threshold. Default: True
+        """
+        # Set device
+        if device is None:
+            self.device = "cuda" if torch.cuda.is_available() else "cpu"
+        else:
+            self.device = device
+        
+        # Set selection mode
+        self.select_best_only = select_best_only
+            
+        # Set up model
+        self.predictor = self._setup_model(model_path, confidence_threshold)
+    
+    def _setup_model(self, weights_path=None, confidence_threshold=0.7):
+        """
+        Set up the Mask R-CNN model for asparagus detection.
+        
+        This method configures a Detectron2 Mask R-CNN model with the following settings:
+        - Base architecture: Mask R-CNN with ResNet-50-FPN backbone
+        - Single class (asparagus) detection
+        - Mask prediction enabled
+        - Customizable confidence threshold
+        - Customizable weights path
+        
+        Args:
+            weights_path (str): Path to model weights file. If None, uses default path
+                               in 'output/model_final.pth'.
+            confidence_threshold (float): Detection confidence threshold (0-1).
+                                         Higher values reduce false positives.
+            
+        Returns:
+            Detectron2 DefaultPredictor object configured for asparagus detection
+        """
+        # Configure model
+        cfg = get_cfg()
+        cfg.merge_from_file(model_zoo.get_config_file("COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3x.yaml"))
+        cfg.MODEL.DEVICE = self.device
+        
+        # Configure for single class (asparagus)
+        cfg.MODEL.ROI_HEADS.NUM_CLASSES = 1
+        cfg.MODEL.MASK_ON = True
+        
+        # Set weights path
+        if weights_path is None:
+            weights_path = os.path.join("..", "output", "model_final.pth")
+        cfg.MODEL.WEIGHTS = weights_path
+        
+        # Set detection threshold
+        cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = confidence_threshold
+        
+        # Create output directory if needed
+        if not os.path.isabs(cfg.OUTPUT_DIR):
+            cfg.OUTPUT_DIR = os.path.join("..", cfg.OUTPUT_DIR)
+        os.makedirs(cfg.OUTPUT_DIR, exist_ok=True)
+        
+        return DefaultPredictor(cfg)
+    
+    def detect(self, image_or_path, save_results=False, output_dir=None):
+        """
+        Detect asparagus in an image.
+        
+        Args:
+            image_or_path: Input image (numpy array) or path to image file (str)
+            save_results (bool): Whether to save visualization and mask files
+            output_dir (str): Directory to save output files (if None, uses current directory)
+            
+        Returns:
+            dict: Detection results containing:
+                - num_detections: Number of asparagus instances detected
+                - instances: Detectron2 instances object for further processing
+                - image_shape: Shape of the input image (height, width, channels)
+                - spears_positions: List of dictionaries with position data for each spear:
+                  - top_pixel: (x, y) coordinates of the top point
+                  - bottom_pixel: (x, y) coordinates of the bottom point
+                  - ten_percent_up: (x, y) coordinates of a point 10% up from the bottom
+                  - score: Detection confidence score
+                - output_files: Dictionary of paths to output visualization files (if save_results=True)
+                  - visualization: Path to detection visualization image
+                  - mask: Path to binary mask image (if detections exist)
+                  - masked_image: Path to masked original image (if detections exist)
+        
+        Raises:
+            ValueError: If the image file could not be loaded
+            RuntimeError: If detection fails
+        """
+        # Set output directory
+        if output_dir is None:
+            output_dir = os.getcwd()
+        
+        # Load image if path provided
+        if isinstance(image_or_path, str):
+            image = cv2.imread(image_or_path)
+            if image is None:
+                raise ValueError(f"Could not load image: {image_or_path}")
+        else:
+            image = image_or_path
+        
+        # Run inference
+        outputs = self.predictor(image)
+        
+        # Get instances
+        instances = outputs["instances"].to("cpu")
+        num_detections = len(instances)
+        
+        # Filter to keep only the highest scoring detection if requested
+        if num_detections > 0 and instances.has("scores") and self.select_best_only:
+            # Get the index of the highest scoring detection
+            best_idx = instances.scores.argmax().item()
+            
+            # Keep only the best detection
+            instances = instances[best_idx:best_idx+1]  # Keep as tensor with single element
+            num_detections = 1
+        
+        # Calculate top and bottom pixel positions for each spear
+        spears_positions = []
+        if num_detections > 0 and instances.has("pred_masks"):
+            for i in range(num_detections):
+                # Get mask for this instance
+                mask = instances.pred_masks[i].numpy()
+                
+                # Find non-zero (True) indices
+                y_indices, x_indices = np.where(mask)
+                
+                if len(y_indices) > 0:
+                    # Find top-most and bottom-most pixels
+                    top_y = int(y_indices.min())
+                    bottom_y = int(y_indices.max())
+                    
+                    # Find corresponding x positions (centerline)
+                    # For top pixel, find the x that corresponds to the minimum y
+                    top_y_indices = np.where(y_indices == top_y)[0]
+                    top_x_values = x_indices[top_y_indices]
+                    top_x = int(np.mean(top_x_values))
+                    
+                    # For bottom pixel, find the x that corresponds to the maximum y
+                    bottom_y_indices = np.where(y_indices == bottom_y)[0]
+                    bottom_x_values = x_indices[bottom_y_indices]
+                    bottom_x = int(np.mean(bottom_x_values))
+                    
+                    # Calculate the point 10% up from the bottom
+                    ten_percent_up_y = int(bottom_y - (bottom_y - top_y) * 0.1)
+                    
+                    # Find the x value at this height by interpolating between top and bottom points
+                    # First check if we have indices at exactly this height
+                    ten_percent_y_indices = np.where(y_indices == ten_percent_up_y)[0]
+                    
+                    if len(ten_percent_y_indices) > 0:
+                        # We have actual points at this height, use their mean
+                        ten_percent_x_values = x_indices[ten_percent_y_indices]
+                        ten_percent_x = int(np.mean(ten_percent_x_values))
+                    else:
+                        # Interpolate between top and bottom
+                        # If top_y == bottom_y (horizontal spear), use the bottom_x
+                        if bottom_y == top_y:
+                            ten_percent_x = bottom_x
+                        else:
+                            # Linear interpolation
+                            percentage = (ten_percent_up_y - top_y) / (bottom_y - top_y)
+                            ten_percent_x = int(top_x + percentage * (bottom_x - top_x))
+                    
+                    spears_positions.append({
+                        "spear_id": i,
+                        "top_pixel": (top_x, top_y),
+                        "bottom_pixel": (bottom_x, bottom_y),
+                        "ten_percent_up": (ten_percent_x, ten_percent_up_y),
+                        "score": float(instances.scores[i]) if instances.has("scores") else None
+                    })
+        
+        # Prepare results dictionary
+        results = {
+            "num_detections": num_detections,
+            "instances": instances,
+            "image_shape": image.shape,
+            "spears_positions": spears_positions,
+            "output_files": {}
+        }
+        
+        # Save results if requested
+        if save_results:
+            self._save_visualizations(image, instances, output_dir, results)
+        
+        return results
+    
+    def _save_visualizations(self, image, instances, output_dir, results):
+        """
+        Create and save visualization images.
+        
+        This method generates and saves three types of visualization files:
+        1. Detection visualization with bounding boxes and scores
+        2. Binary mask of all detections
+        3. Original image with background removed (only shows detected asparagus)
+        
+        Args:
+            image: Input image (numpy array)
+            instances: Detectron2 instances object containing predictions
+            output_dir: Directory to save output files
+            results: Results dictionary to update with file paths
+        
+        Returns:
+            None, but updates the results dictionary with output file paths
+        """
+        # Create visualization
+        v = Visualizer(image[:, :, ::-1], scale=1.0)
+        result = v.draw_instance_predictions(instances)
+        result_img = result.get_image()[:, :, ::-1]
+        
+        # Mark top and bottom positions on the image if available
+        if results.get("spears_positions"):
+            # Copy the visualization image for marking positions
+            marked_img = result_img.copy()
+            
+            # Define colors and marker sizes
+            top_color = (0, 255, 0)     # Green for top pixels
+            bottom_color = (0, 0, 255)  # Red for bottom pixels
+            ten_percent_color = (0, 0, 255)  # Red for 10% up point (changed to red)
+            marker_size = 5
+            cut_point_marker_size = 10  # Larger marker size for cut points (twice as big)
+            font = cv2.FONT_HERSHEY_SIMPLEX
+            font_scale = 0.5
+            font_thickness = 1
+            
+            # Draw markers and labels for each spear
+            for spear in results["spears_positions"]:
+                # Draw top pixel
+                top_x, top_y = spear["top_pixel"]
+                cv2.circle(marked_img, (top_x, top_y), marker_size, top_color, -1)
+                cv2.putText(marked_img, f"T{spear['spear_id']}", (top_x + 5, top_y - 5), 
+                           font, font_scale, top_color, font_thickness)
+                
+                # Draw bottom pixel
+                bottom_x, bottom_y = spear["bottom_pixel"]
+                cv2.circle(marked_img, (bottom_x, bottom_y), marker_size, bottom_color, -1)
+                cv2.putText(marked_img, f"B{spear['spear_id']}", (bottom_x + 5, bottom_y + 15), 
+                           font, font_scale, bottom_color, font_thickness)
+                
+                # Draw 10% up point - using larger marker size
+                ten_percent_x, ten_percent_y = spear["ten_percent_up"]
+                cv2.circle(marked_img, (ten_percent_x, ten_percent_y), cut_point_marker_size, ten_percent_color, -1)
+                
+                # Draw a line connecting the two points
+                cv2.line(marked_img, (top_x, top_y), (bottom_x, bottom_y), (255, 255, 0), 1)
+            
+            # Save visualization with markers
+            vis_path = os.path.join(output_dir, "detection_visualization.png")
+            cv2.imwrite(vis_path, marked_img)
+            results["output_files"]["visualization"] = vis_path
+        else:
+            # Save standard visualization
+            vis_path = os.path.join(output_dir, "detection_visualization.png")
+            cv2.imwrite(vis_path, result_img)
+            results["output_files"]["visualization"] = vis_path
+        
+        # Process mask if detections exist
+        num_detections = len(instances)
+        if num_detections > 0 and instances.has("pred_masks"):
+            # Generate object detection mask
+            combined_mask = instances.pred_masks.any(dim=0).numpy()
+            mask_img = (combined_mask * 255).astype(np.uint8)
+            
+            # Save the original binary mask (without any markings)
+            obj_mask_path = os.path.join(output_dir, "binary_mask.png")
+            cv2.imwrite(obj_mask_path, mask_img)
+            results["output_files"]["mask"] = obj_mask_path
+            
+            # Create a separate binary mask for cut points
+            if results.get("spears_positions"):
+                # Create an empty mask for cut points with same dimensions as the original mask
+                cut_points_mask = np.zeros_like(mask_img)
+                
+                # Draw the 10% up points (cut points) on this separate mask
+                for spear in results["spears_positions"]:
+                    # Get 10% up point coordinates
+                    ten_percent_x, ten_percent_y = spear["ten_percent_up"]
+                    # Draw a filled circle at the cut point position with the larger marker size
+                    cv2.circle(cut_points_mask, (ten_percent_x, ten_percent_y), cut_point_marker_size, 255, -1)
+                
+                # Save the cut points binary mask
+                cut_points_mask_path = os.path.join(output_dir, "cut_points_mask.png")
+                cv2.imwrite(cut_points_mask_path, cut_points_mask)
+                results["output_files"]["cut_points_mask"] = cut_points_mask_path
+                
+                # Also create a visualization with both masks for debugging
+                # Convert object mask to color for better visualization
+                mask_img_color = cv2.cvtColor(mask_img, cv2.COLOR_GRAY2BGR)
+                
+                # Mark the cut points on the colored mask with larger marker size
+                for spear in results["spears_positions"]:
+                    ten_percent_x, ten_percent_y = spear["ten_percent_up"]
+                    cv2.circle(mask_img_color, (ten_percent_x, ten_percent_y), cut_point_marker_size, (0, 0, 255), -1)
+                
+                # Save the combined visualization
+                combined_mask_path = os.path.join(output_dir, "combined_mask_visualization.png")
+                cv2.imwrite(combined_mask_path, mask_img_color)
+                results["output_files"]["combined_mask_visualization"] = combined_mask_path
+    
+    def get_model_info(self):
+        """
+        Get detailed information about the model.
+        
+        This method provides information about the model architecture, parameters,
+        and the device it's running on. This is useful for debugging and understanding
+        the computational resources required by the model.
+        
+        Returns:
+            dict: Model information containing:
+                - device: The device being used for inference ('cuda' or 'cpu')
+                - total_parameters: Total number of parameters in the model
+                - trainable_parameters: Number of trainable parameters
+                - model: String representation of the model architecture
+        """
+        model = self.predictor.model
+        total_params = sum(p.numel() for p in model.parameters())
+        trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+        
+        return {
+            "device": self.device,
+            "total_parameters": total_params,
+            "trainable_parameters": trainable_params,
+            "model": str(model),
+        }
+
+
+# Function-based interface for backward compatibility with original script
+def detect_asparagus(image_path, output_dir=None, visualize=True, confidence_threshold=0.7, model_path=None, select_best_only=True):
+    """
+    Detect asparagus in an image (backward-compatible function interface).
+    
+    This function provides backward compatibility with the original asperagas_detection.py script.
+    It creates a temporary AsparagusDetector instance and uses it to detect asparagus in the image.
+    
+    Args:
+        image_path (str): Path to the input image
+        output_dir (str): Directory to save output files (if None, uses current directory)
+        visualize (bool): Whether to generate visualization images
+        confidence_threshold (float): Detection confidence threshold (0-1)
+        model_path (str): Path to model weights file (if None, uses default path)
+        select_best_only (bool): If True, only returns the highest scoring detection.
+                               If False, returns all detections above threshold. Default: True
+        
+    Returns:
+        dict: Detection results and paths to output files, including:
+            - num_detections: Number of asparagus instances detected
+            - instances: Detectron2 instances object for further processing
+            - image_shape: Shape of the input image (height, width, channels) 
+            - spears_positions: List of dictionaries with position data for each spear:
+              - top_pixel: (x, y) coordinates of the top point
+              - bottom_pixel: (x, y) coordinates of the bottom point
+              - ten_percent_up: (x, y) coordinates of a point 10% up from the bottom
+              - score: Detection confidence score
+            - output_files: Dictionary of paths to output files
+    """
+    # Set output directory
+    if output_dir is None:
+        output_dir = os.getcwd()
+    
+    # Create detector
+    detector = AsparagusDetector(
+        model_path=model_path, 
+        confidence_threshold=confidence_threshold,
+        select_best_only=select_best_only
+    )
+    
+    # Run detection
+    return detector.detect(image_path, save_results=visualize, output_dir=output_dir)
+
+if __name__ == "__main__":
+    # Parse command-line arguments
+    parser = argparse.ArgumentParser(description="Asparagus Detection Tool")
+    parser.add_argument("--image", "-i", required=True, help="Path to input image")
+    parser.add_argument("--output", "-o", default=None, help="Path to output directory")
+    parser.add_argument("--threshold", "-t", type=float, default=0.7, help="Detection confidence threshold (0-1)")
+    parser.add_argument("--model", "-m", default=None, help="Path to model weights file")
+    parser.add_argument("--info", action="store_true", help="Display model information")
+    parser.add_argument("--no-visualization", dest="visualize", action="store_false", 
+                      help="Disable visualization generation")
+    parser.add_argument("--all-detections", action="store_true", 
+                      help="Return all detections instead of just the highest scoring one")
+    parser.add_argument("--verbose", "-v", action="store_true", help="Enable verbose output")
+    
+    args = parser.parse_args()
+    
+    # Set logging level
+    if args.verbose:
+        logging.getLogger().setLevel(logging.DEBUG)
+    
+    # Check if CUDA is available
+    logging.info(f"Using device: {DEVICE}")
+    
+    # Validate image path
+    image_path = args.image
+    if not os.path.exists(image_path):
+        logging.error(f"Image not found: {image_path}")
+        sys.exit(1)
+    
+    try:
+        # Create detector
+        detector = AsparagusDetector(
+            model_path=args.model,
+            confidence_threshold=args.threshold,
+            select_best_only=not args.all_detections  # Invert flag: default is to select best only
+        )
+        
+        # Show model info if requested
+        if args.info:
+            model_info = detector.get_model_info()
+            print("\nModel Information:")
+            print(f"  Device: {model_info['device']}")
+            print(f"  Total Parameters: {model_info['total_parameters']:,}")
+            print(f"  Trainable Parameters: {model_info['trainable_parameters']:,}")
+            print("\nModel Architecture:")
+            print(model_info['model'])
+        
+        # Run detection
+        logging.info(f"Detecting asparagus in {image_path}")
+        results = detector.detect(
+            image_path, 
+            save_results=args.visualize, 
+            output_dir=args.output
+        )
+        
+        # Display results
+        print(f"\nDetection Results:")
+        if not args.all_detections:
+            print(f"  Selected highest scoring asparagus (best of all detections)")
+        print(f"  Detected {results['num_detections']} asparagus instances")
+        print(f"  Image shape: {results['image_shape']}")
+        
+        # Display spear positions
+        if results.get("spears_positions"):
+            print("\nAsparagus Spear Positions (x, y):")
+            print("  ID   Score      Top Pixel       Bottom Pixel     10% Up Point")
+            print("  --   -----      ---------       ------------     -----------")
+            for spear in results["spears_positions"]:
+                score = spear.get("score", "N/A")
+                score_str = f"{score:.3f}" if isinstance(score, float) else score
+                print(f"  {spear['spear_id']:<4} {score_str:<10} {spear['top_pixel']} {spear['bottom_pixel']} {spear['ten_percent_up']}")
+        
+        if results.get("output_files"):
+            print("\nOutput Files:")
+            for file_type, file_path in results["output_files"].items():
+                print(f"  - {file_type}: {file_path}")
+                
+    except Exception as e:
+        logging.error(f"Error during detection: {e}")
+        if args.verbose:
+            import traceback
+            traceback.print_exc()
+        sys.exit(1)
+\end{lstlisting}
+
+\section{Finding Average Position}
+
+The following listing calculates the average position of the segmented asparagus points solely from the filtered point cloud.
+
+\begin{lstlisting}[language=Python, caption={Average Position Calculation}, label={lst:averagePosition}]
+import open3d as o3d
+import numpy as np
+
+# Load the filtered point cloud
+ply_path = 'output/filtered_pointcloud.ply'
+pcd = o3d.io.read_point_cloud(ply_path)
+
+if pcd.is_empty():
+    print("Point cloud is empty or not found.")
+else:
+    points = np.asarray(pcd.points)
+    if len(points) > 0:
+        avg_x = np.mean(points[:, 0]) * 1000
+        avg_y = np.mean(points[:, 1]) * 1000
+        avg_z = np.mean(points[:, 2]) * 1000
+        print(f"Average position: X={avg_x:.3f} mm, Y={avg_y:.3f} mm, Z={avg_z:.3f} mm")
+        print(f"Total points: {len(points)}")
+    else:
+        print("No points in the point cloud.")
+\end{lstlisting}
+
+\section{Robot Arm Repository Structure}
+
+The following file tree shows the organization of the \textit{ROBOT\_ARM} repository, which contains the firmware and source code for the robot arm's mechanics and kinematics.
+
+\begin{verbatim}
+ROBOT_ARM/
+|-- .pio/                             # PlatformIO build artifacts
+|-- .vscode/                          # VS Code configuration
+|-- include/                          # Header files
+|   `-- README
+|-- lib/                              # Private libraries
+|   `-- README
+|-- src/                              # Main C++ source code for Arduino
+|   |-- main.cpp                      # Active firmware code
+|   `-- main.gear                     # Alternative firmware configuration
+|-- test/                             # Unit testing folder
+|   `-- README
+|-- __pycache__/                      # Python cache files
+|-- demonstration_video.mp4           # Demo video
+|-- platformio.ini                    # PlatformIO project configuration
+|-- README.md                         # Project documentation
+|-- robot_controller_calibration.py # Main Python controller (Inverse Kinematics)
+`-- serial_sender.py        # Python utility for testing serial ports
+\end{verbatim}
+
+\section{Motor 1 Control (With Gear Reducer)}
+
+The following listing shows the configuration and control logic for Motor 1, which utilizes a gear reducer.
+
+\begin{lstlisting}[language=C++, caption={Motor 1 Control Logic}, label={lst:motor1Code}]
+
+// code to run test on close loop servo mtoor 1 hooked up with blur arduino
+
+#include <Arduino.h>
+
+#define enPin 5    // Pin for ENABLE signal
+#define stpPin 6   // Pin for STEP signal
+#define dirPin 7   // Pin for DIRECTION signal
+
+// Motor configuration (no gearbox)
+#define STEPS_PER_REVOLUTION 200    // For a typical 1.8 stepper (200 steps per revolution)
+#define MICROSTEPS 16               // Microstepping setting on your driver
+#define GEAR_RATIO 1                // No gearbox - direct drive (1:1 ratio)
+
+// Global variablesSds
+float currentAngle = 0.0;           // Keeps track of the current shaft angle
+String inputString = "";            // String to hold incoming serial data
+boolean stringComplete = false;     // Flag to indicate if a complete string has been received
+
+void rotateShaftByDegrees(float shaftAngle); // Function prototype for rotating the motor shaft by a specified angle
+void rotateShaftToAngle(float targetAngle);  // Function prototype for rotating to a specific angle
+
+/**************************************************************
+*** Connect:
+    * D5---En (Select L or Hold for the En option on the closed-loop driver board)
+    * D6---Stp
+    * D7---Dir
+    * V+,Gnd----10~28V
+    * gnd---gnd
+*** Precautions:
+    * Connect the wire first, then power on, do not unplug or plug when the power is on!
+    * When powering on, first connect 10~28V power supply, 
+      then connect the Arduino control board USB power supply!
+    * Avoid damage caused by some effects.
+    * When the power is off, first cut off the USB power supply of the Arduino control board, 
+      then cut off the 10~28V power supply.
+**************************************************************/
+
+void setup() {
+  // Initialize pins
+  pinMode(enPin, OUTPUT);
+  digitalWrite(enPin, LOW); // Active low, check manual for your setup
+  pinMode(stpPin, OUTPUT);
+  digitalWrite(stpPin, LOW);
+  pinMode(dirPin, OUTPUT);
+  digitalWrite(dirPin, HIGH); // Set to HIGH for clockwise (change to LOW for counterclockwise)
+
+  // Initialize serial for debugging
+  Serial.begin(9600);
+  Serial.println("Closed-loop stepper motor driver - Angle Control");
+  Serial.println("Enter an angle (0-360) to move the motor:");
+  
+  // Reserve memory for the inputString
+  inputString.reserve(10);
+}
+
+void loop() {
+  // Check if a new command has been received
+  if (stringComplete) {
+    // Convert the received string to a float (angle)
+    float targetAngle = inputString.toFloat();
+    
+    // Print the command for confirmation
+    Serial.print("Moving to angle: ");
+    Serial.println(targetAngle);
+    
+    // Rotate to the specified angle
+    rotateShaftToAngle(targetAngle);
+    
+    // Reset for the next command
+    inputString = "";
+    stringComplete = false;
+    
+    // Prompt for next angle
+    Serial.println("Enter an angle (0-360) to move the motor:");
+  }
+  
+  // Read serial input
+  while (Serial.available()) {
+    char inChar = (char)Serial.read();
+    
+    // Add incoming character to inputString
+    if (inChar == '\n') {
+      stringComplete = true;
+    } else {
+      inputString += inChar;
+    }
+  }
+}
+
+// Function to rotate the shaft to a specific absolute angle
+void rotateShaftToAngle(float targetAngle) {
+  // Calculate the angle difference (shortest path)
+  float angleDifference = targetAngle - currentAngle;
+  
+  // Normalize the angle difference to -180 to +180 degrees
+  while (angleDifference > 180) angleDifference -= 360;
+  while (angleDifference <= -180) angleDifference += 360;
+  
+  // Rotate by the calculated difference
+  rotateShaftByDegrees(angleDifference);
+  
+  // Update current angle
+  currentAngle = targetAngle;
+  
+  // Normalize current angle to 0-360 range
+  while (currentAngle >= 360) currentAngle -= 360;
+  while (currentAngle < 0) currentAngle += 360;
+  
+  Serial.print("Current position: ");
+  Serial.println(currentAngle);
+}
+
+// Function to rotate the motor shaft by a specified angle
+void rotateShaftByDegrees(float shaftAngle) {
+  // Calculate total steps needed for the motor to rotate by the desired angle
+  // Formula: (shaftAngle / 360) * GEAR_RATIO * STEPS_PER_REVOLUTION * MICROSTEPS
+  // Since GEAR_RATIO = 1 (no gearbox), this simplifies to: (shaftAngle / 360) * STEPS_PER_REVOLUTION * MICROSTEPS
+  long totalSteps = (long)((abs(shaftAngle) / 360.0) * GEAR_RATIO * STEPS_PER_REVOLUTION * MICROSTEPS);
+  
+  // Set direction based on positive or negative angle
+  digitalWrite(dirPin, shaftAngle >= 0 ? HIGH : LOW);
+  
+  // Send the required number of pulses
+  for (long i = 0; i < totalSteps; i++) {
+    digitalWrite(stpPin, HIGH);
+    delayMicroseconds(600); // Pulse width (slowed to 1/10th speed)
+    digitalWrite(stpPin, LOW);
+    delayMicroseconds(600); // Interval between pulses (slowed to 1/10th speed)
+  }
+}
+\end{lstlisting}
+
+\section{Motor 2 Control (Without Gear Reducer)}
+
+The following listing details the control implementation for Motor 2, which operates without a gear reducer.
+
+\begin{lstlisting}[language=C++, caption={Motor 2 Control Logic}, label={lst:motor2Code}]
+
+
+    
+#include <Arduino.h>
+
+#define enPin 5    // Pin for ENABLE signal
+#define stpPin 6   // Pin for STEP signal
+#define dirPin 7   // Pin for DIRECTION signal
+
+// Motor configuration (gearbox)
+#define STEPS_PER_REVOLUTION 200    // For a typical 1.8 stepper (200 steps per revolution)
+#define MICROSTEPS 16               // Microstepping setting on your driver
+#define GEAR_RATIO 30                // Gearbox ratio (e.g., 30:1 gearbox)
+
+// Global variables
+float currentAngle = 0.0;           // Keeps track of the current shaft angle
+String inputString = "";            // String to hold incoming serial data
+boolean stringComplete = false;     // Flag to indicate if a complete string has been received
+
+void rotateShaftByDegrees(float shaftAngle); // Function prototype for rotating the motor shaft by a specified angle
+void rotateShaftToAngle(float targetAngle);  // Function prototype for rotating to a specific angle
+
+/**************************************************************
+*** Connect:
+    * D5---En (Select L or Hold for the En option on the closed-loop driver board)
+    * D6---Stp
+    * D7---Dir
+    * V+,Gnd----10~28V
+    * gnd---gnd
+*** Precautions:
+    * Connect the wire first, then power on, do not unplug or plug when the power is on!
+    * When powering on, first connect 10~28V power supply, 
+      then connect the Arduino control board USB power supply!
+    * Avoid damage caused by some effects.
+    * When the power is off, first cut off the USB power supply of the Arduino control board, 
+      then cut off the 10~28V power supply.
+**************************************************************/
+
+void setup() {
+  // Initialize pins
+  pinMode(enPin, OUTPUT);
+  digitalWrite(enPin, LOW); // Active low, check manual for your setup
+  pinMode(stpPin, OUTPUT);
+  digitalWrite(stpPin, LOW);
+  pinMode(dirPin, OUTPUT);
+  digitalWrite(dirPin, HIGH); // Set to HIGH for clockwise (change to LOW for counterclockwise)
+
+  // Initialize serial for debugging
+  Serial.begin(9600);
+  Serial.println("Closed-loop stepper motor driver - Angle Control");
+  Serial.println("Enter an angle (0-360) to move the motor:");
+  
+  // Reserve memory for the inputString
+  inputString.reserve(10);
+}
+
+void loop() {
+  // Check if a new command has been received
+  if (stringComplete) {
+    // Convert the received string to a float (angle)
+    float targetAngle = inputString.toFloat();
+    
+    // Print the command for confirmation
+    Serial.print("Moving to angle: ");
+    Serial.println(targetAngle);
+    
+    // Rotate to the specified angle
+    rotateShaftToAngle(targetAngle);
+    
+    // Reset for the next command
+    inputString = "";
+    stringComplete = false;
+    
+    // Prompt for next angle
+    Serial.println("Enter an angle (0-360) to move the motor:");
+  }
+  
+  // Read serial input
+  while (Serial.available()) {
+    char inChar = (char)Serial.read();
+    
+    // Add incoming character to inputString
+    if (inChar == '\n') {
+      stringComplete = true;
+    } else {
+      inputString += inChar;
+    }
+  }
+}
+
+// Function to rotate the shaft to a specific absolute angle
+void rotateShaftToAngle(float targetAngle) {
+  // Calculate the angle difference (shortest path)
+  float angleDifference = targetAngle - currentAngle;
+  
+  // Normalize the angle difference to -180 to +180 degrees
+  while (angleDifference > 180) angleDifference -= 360;
+  while (angleDifference <= -180) angleDifference += 360;
+  
+  // Rotate by the calculated difference
+  rotateShaftByDegrees(angleDifference);
+  
+  // Update current angle
+  currentAngle = targetAngle;
+  
+  // Normalize current angle to 0-360 range
+  while (currentAngle >= 360) currentAngle -= 360;
+  while (currentAngle < 0) currentAngle += 360;
+  
+  Serial.print("Current position: ");
+  Serial.println(currentAngle);
+}
+
+// Function to rotate the motor shaft by a specified angle
+void rotateShaftByDegrees(float shaftAngle) {
+  // Calculate total steps needed for the motor to rotate by the desired angle
+  // Formula: (shaftAngle / 360) * GEAR_RATIO * STEPS_PER_REVOLUTION * MICROSTEPS
+  // Since GEAR_RATIO = 1 (no gearbox), this simplifies to: (shaftAngle / 360) * STEPS_PER_REVOLUTION * MICROSTEPS
+  long totalSteps = (long)((abs(shaftAngle) / 360.0) * GEAR_RATIO * STEPS_PER_REVOLUTION * MICROSTEPS);
+  
+  // Set direction based on positive or negative angle
+  digitalWrite(dirPin, shaftAngle >= 0 ? HIGH : LOW);
+  
+  // Send the required number of pulses
+  for (long i = 0; i < totalSteps; i++) {
+    digitalWrite(stpPin, HIGH);
+    delayMicroseconds(60); // Pulse width (adjust for speed)
+    digitalWrite(stpPin, LOW);
+    delayMicroseconds(60); // Interval between pulses (adjust for speed)
+  }
+}
+\end{lstlisting}
+
+\section{Robot Controller Calibration}
+
+The following listing contains the Python script used for inverse kinematics calculations and robot arm calibration.
+
+\begin{lstlisting}[language=Python, caption={Robot Controller and Calibration}, label={lst:robotCalibration}]
+import serial
+import time
+import math
+import matplotlib.pyplot as plt
+import numpy as np
+
+# ===== ROBOT ARM CONFIGURATION =====
+# Serial Port Settings
+PORT1 = 'COM11'   # Port for Joint 1 (theta1)
+PORT2 = 'COM10'  # Port for Joint 2 (theta2)
+BAUD_RATE = 9600 # Communication speed
+TIMEOUT = 1      # Timeout in seconds
+
+# Robot Arm Physical Parameters (in millimeters)
+L1 = 214.0  # Length of first link in mm
+L2 = 184.0   # Length of second link in mm
+
+# Robot Direction Configuration
+# Set to True if positive angles should rotate clockwise (opposite of math convention)
+CLOCKWISE_POSITIVE = False  # Change to True if your robot follows clockwise-positive convention
+
+# Initial Robot Position (both links upright, pointing upwards)
+INITIAL_THETA1 = 0.0  # degrees, robot convention (upright)
+INITIAL_THETA2 = 0.0   # degrees, robot convention
+# =====================================
+
+# Import IK function from IK.py
+def inverse_kinematics(x, y, L1=L1, L2=L2):
+    """
+    Calculate joint angles for 2-DOF planar robot arm
+    
+    Args:
+        x, y: Target coordinates in millimeters (mm)
+        L1: Length of first link in mm (default: 240.0)
+        L2: Length of second link in mm (default: 180.0)
+    
+    Returns:
+        (theta1, theta2) in degrees, or None if unreachable
+    """
+    # Distance to target
+    distance = math.sqrt(x*x + y*y)
+    
+    # Check reachability
+    if distance > (L1 + L2) or distance < abs(L1 - L2):
+        return None
+    
+    # Calculate theta2 for both elbow configurations
+    cos_theta2 = (x*x + y*y - L1*L1 - L2*L2) / (2 * L1 * L2)
+    cos_theta2 = max(-1, min(1, cos_theta2))  # Clamp to valid range
+    
+    # Two possible solutions for theta2
+    theta2_elbow_up = math.acos(cos_theta2)
+    theta2_elbow_down = -math.acos(cos_theta2)
+    
+    solutions = []
+    
+    # Calculate theta1 for elbow up configuration
+    k1_up = L1 + L2 * math.cos(theta2_elbow_up)
+    k2_up = L2 * math.sin(theta2_elbow_up)
+    theta1_elbow_up = math.atan2(y, x) - math.atan2(k2_up, k1_up)
+    solutions.append((theta1_elbow_up, theta2_elbow_up, "elbow_up"))
+    
+    # Calculate theta1 for elbow down configuration
+    k1_down = L1 + L2 * math.cos(theta2_elbow_down)
+    k2_down = L2 * math.sin(theta2_elbow_down)
+    theta1_elbow_down = math.atan2(y, x) - math.atan2(k2_down, k1_down)
+    solutions.append((theta1_elbow_down, theta2_elbow_down, "elbow_down"))
+    
+    # Choose solution with theta1 that is less negative (more positive)
+    best_solution = max(solutions, key=lambda sol: sol[0])
+    
+    # Convert to degrees and return
+    theta1_deg = math.degrees(best_solution[0])
+    theta2_deg = math.degrees(best_solution[1])
+    
+    # Convert from math convention (0deg=right) to robot convention (0deg=up)
+    # The 90deg offset is ALWAYS needed because robot zero = UP, math zero = RIGHT
+    if CLOCKWISE_POSITIVE:
+        # Robot uses clockwise as positive direction
+        # robot_theta1 = 90deg - math_theta1
+        # robot_theta2 = -math_theta2
+        theta1_deg = 90 - theta1_deg
+        theta2_deg = -theta2_deg
+        direction_str = "CW+"
+    else:
+        # Robot uses counter-clockwise as positive direction (like math, but offset)
+        # robot_theta1 = math_theta1 - 90deg
+        # robot_theta2 = -math_theta2 (Joint 2 motor is reversed)
+        theta1_deg = theta1_deg - 90
+        theta2_deg = -theta2_deg
+        direction_str = "CCW+"
+    
+    # Debug output for theta calculations
+    print(f"[DEBUG] IK Debug: cos_theta2={cos_theta2:.4f}")
+    print(f"[DEBUG] IK Debug: theta2_elbow_up={math.degrees(theta2_elbow_up):.2f}deg, theta2_elbow_down={math.degrees(theta2_elbow_down):.2f}deg")
+    print(f"[DEBUG] IK Debug: Selected solution: {best_solution[2]}")
+    print(f"[DEBUG] IK Debug: Robot angles (0deg=UP, {direction_str}): theta1={theta1_deg:.2f}deg, theta2={theta2_deg:.2f}deg")
+    
+    return theta1_deg, theta2_deg
+
+def visualize_robot(x, y, theta1, theta2, L1=L1, L2=L2):
+    """
+    Visualize the robot arm reaching for target position
+    Note: theta1, theta2 are in robot convention (0deg=UP, CW+)
+          Visualization uses standard math convention (0deg=RIGHT, CCW+)
+    """
+    # Convert from robot convention (0deg=UP) back to math convention (0deg=RIGHT, CCW+)
+    if CLOCKWISE_POSITIVE:
+        # Inverse of: robot_theta1 = 90 - math_theta1 -> math_theta1 = 90 - robot_theta1
+        # Inverse of: robot_theta2 = -math_theta2 -> math_theta2 = -robot_theta2
+        viz_theta1 = 90 - theta1
+        viz_theta2 = -theta2
+    else:
+        # Inverse of: robot_theta1 = math_theta1 - 90 -> math_theta1 = robot_theta1 + 90
+        # Inverse of: robot_theta2 = -math_theta2 -> math_theta2 = -robot_theta2
+        viz_theta1 = theta1 + 90
+        viz_theta2 = -theta2
+    
+    # Convert angles to radians for math calculations
+    theta1_rad = math.radians(viz_theta1)
+    theta2_rad = math.radians(viz_theta2)
+    
+    # Calculate joint positions
+    base = [0, 0]
+    elbow = [L1 * math.cos(theta1_rad), L1 * math.sin(theta1_rad)]
+    end_effector = [elbow[0] + L2 * math.cos(theta1_rad + theta2_rad), 
+                    elbow[1] + L2 * math.sin(theta1_rad + theta2_rad)]
+    
+    # Create plot
+    plt.figure(figsize=(10, 8))
+    
+    # Draw workspace (reachable area)
+    circle_outer = plt.Circle((0, 0), L1 + L2, fill=False, color='lightblue', linestyle='--', alpha=0.5)
+    circle_inner = plt.Circle((0, 0), abs(L1 - L2), fill=False, color='lightblue', linestyle='--', alpha=0.5)
+    plt.gca().add_patch(circle_outer)
+    plt.gca().add_patch(circle_inner)
+    
+    # Draw robot arm
+    plt.plot([base[0], elbow[0]], [base[1], elbow[1]], 'b-', linewidth=8, label='Link 1 (L1)')
+    plt.plot([elbow[0], end_effector[0]], [elbow[1], end_effector[1]], 'r-', linewidth=8, label='Link 2 (L2)')
+    
+    # Draw joints
+    plt.plot(base[0], base[1], 'ko', markersize=12, label='Base Joint')
+    plt.plot(elbow[0], elbow[1], 'go', markersize=10, label='Elbow Joint')
+    plt.plot(end_effector[0], end_effector[1], 'ro', markersize=10, label='End Effector')
+    
+    # Draw target
+    plt.plot(x, y, 'r*', markersize=15, label='Target')
+    
+    # Add coordinate annotations
+    plt.annotate(f'Base\n(0, 0)', xy=base, xytext=(10, 10), 
+                textcoords='offset points', fontsize=9, ha='left')
+    plt.annotate(f'Elbow\n({elbow[0]:.1f}, {elbow[1]:.1f})', xy=elbow, xytext=(10, 10), 
+                textcoords='offset points', fontsize=9, ha='left')
+    plt.annotate(f'Target\n({x}, {y})', xy=(x, y), xytext=(10, 10), 
+                textcoords='offset points', fontsize=9, ha='left')
+    
+    # Add grid and labels
+    plt.grid(True, alpha=0.3)
+    plt.axis('equal')
+    plt.xlabel('X (mm)')
+    plt.ylabel('Y (mm)')
+    plt.title(f'Robot Arm Configuration\nTarget: ({x}mm, {y}mm)\nRobot Angles: theta1={theta1:.1f}deg, theta2={theta2:.1f}deg (Clockwise+)' if CLOCKWISE_POSITIVE else f'Robot Arm Configuration\nTarget: ({x}mm, {y}mm)\nAngles: theta1={theta1:.1f}deg, theta2={theta2:.1f}deg')
+    plt.legend(loc='upper right')
+    
+    # Set axis limits
+    max_reach = L1 + L2 + 20
+    plt.xlim(-max_reach, max_reach)
+    plt.ylim(-max_reach, max_reach)
+    
+    # Add workspace info text
+    plt.text(0.02, 0.98, f'Workspace: {abs(L1-L2):.0f}mm to {L1+L2:.0f}mm\nL1: {L1}mm, L2: {L2}mm', 
+             transform=plt.gca().transAxes, fontsize=10, verticalalignment='top',
+             bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.8))
+    
+    plt.tight_layout()
+    plt.show()
+    
+    print(f"[PLOT] Visualization displayed for target ({x}mm, {y}mm)")
+
+def test_robot_serial_ports():
+    """
+    Test if the configured serial ports can be opened.
+    """
+    print("=== Testing Robot Serial Ports ===")
+    
+    # Test PORT1
+    try:
+        ser1 = serial.Serial(PORT1, BAUD_RATE, timeout=TIMEOUT)
+        print(f"[OK] {PORT1} - OK (can open and close)")
+        ser1.close()
+    except serial.SerialException as e:
+        print(f"[FAIL] {PORT1} - FAILED: {e}")
+    
+    # Test PORT2
+    try:
+        ser2 = serial.Serial(PORT2, BAUD_RATE, timeout=TIMEOUT)
+        print(f"[OK] {PORT2} - OK (can open and close)")
+        ser2.close()
+    except serial.SerialException as e:
+        print(f"[FAIL] {PORT2} - FAILED: {e}")
+    
+    print()
+
+def open_robot_serial_ports():
+    """
+    Opens and returns both serial port connections for the robot.
+    """
+    print("Opening robot serial ports...")
+    
+    try:
+        ser1 = serial.Serial(PORT1, BAUD_RATE, timeout=TIMEOUT)
+        print(f"[OK] Connected to {PORT1} (Joint 1 - theta1)")
+    except serial.SerialException as e:
+        print(f"[FAIL] Failed to connect to {PORT1}: {e}")
+        return None, None
+    
+    try:
+        ser2 = serial.Serial(PORT2, BAUD_RATE, timeout=TIMEOUT)
+        print(f"[OK] Connected to {PORT2} (Joint 2 - theta2)")
+    except serial.SerialException as e:
+        print(f"[FAIL] Failed to connect to {PORT2}: {e}")
+        ser1.close()
+        return None, None
+    
+    # Wait for serial ports to initialize
+    time.sleep(2)
+    print("[OK] Robot serial ports ready")
+    print(f"Robot arm parameters: L1={L1}mm, L2={L2}mm")
+    print(f"Workspace range: {abs(L1-L2):.1f}mm to {L1+L2:.1f}mm from origin\n")
+    
+    return ser1, ser2
+
+def send_angles(ser1, ser2, theta1, theta2):
+    """
+    Send joint angles to the robot serial ports.
+    theta1, theta2 should be in robot convention (degrees).
+    """
+    theta1_rounded = round(theta1, 1)
+    theta2_rounded = round(theta2, 1)
+    
+    theta1_data = (str(theta1_rounded) + '\n').encode()
+    theta2_data = (str(theta2_rounded) + '\n').encode()
+    
+    ser1.write(theta1_data)
+    ser2.write(theta2_data)
+    ser1.flush()
+    ser2.flush()
+    
+    print(f"[OK] Sent angles: theta1={theta1_rounded}deg, theta2={theta2_rounded}deg")
+
+# Test and open the serial ports
+test_robot_serial_ports()
+ser1, ser2 = open_robot_serial_ports()
+
+if ser1 is None or ser2 is None:
+    print("Failed to open robot serial ports. Exiting.")
+    exit()
+
+# Set initial position (both links upright)
+print("Setting initial robot position (upright, angles 0deg, 0deg)...")
+send_angles(ser1, ser2, INITIAL_THETA1, INITIAL_THETA2)
+print("[OK] Initial position set\n")
+
+print("\n=== Robot Arm Position-to-Angle Controller ===")
+print("Enter target X,Y coordinates in millimeters (mm) and the system will:")
+print("1. Calculate inverse kinematics")
+print("2. Send joint angles to serial ports")
+print("3. Show real-time visualization")
+print(f"4. Port1 ({PORT1}) = Joint 1 angle (theta1)")
+print(f"5. Port2 ({PORT2}) = Joint 2 angle (theta2)")
+print()
+
+try:
+    while True:
+        # Get target coordinates from user
+        try:
+            x_input = input("Enter X coordinate in mm (or 'q' to quit): ")
+            if x_input.lower() == 'q':
+                break
+            
+            y_input = input("Enter Y coordinate in mm: ")
+            if y_input.lower() == 'q':
+                break
+                
+            # Convert to float
+            x = float(x_input)
+            y = float(y_input)
+            
+        except ValueError:
+            print("Invalid input! Please enter numeric values in mm.")
+            continue
+        except KeyboardInterrupt:
+            break
+
+        print(f"\nTarget position: ({x}mm, {y}mm)")
+        
+        # Calculate inverse kinematics
+        result = inverse_kinematics(x, y, L1, L2)
+        
+        if result is None:
+            print(f"[FAIL] Target ({x}mm, {y}mm) is UNREACHABLE!")
+            print(f"Distance: {math.sqrt(x*x + y*y):.2f}mm")
+            print(f"Reachable range: {abs(L1-L2):.1f}mm to {L1+L2:.1f}mm")
+            print("Please try a different position.\n")
+            continue
+        
+        theta1, theta2 = result
+        
+        # theta1, theta2 are now in robot convention (0deg=UP, CW+)
+        
+        # Send angles to serial ports
+        try:
+            # Wait for user confirmation before sending
+            print(f"\n[PAUSE]  Ready to send data to robot:")
+            print(f"   theta1 = {theta1:.1f}deg -> {PORT1}")
+            print(f"   theta2 = {theta2:.1f}deg -> {PORT2}")
+            
+            user_input = input("\nPress Enter to SEND data, or 's' to SKIP: ").strip().lower()
+            
+            if user_input == 's':
+                print("[INFO] Data transmission SKIPPED by user")
+                # Still show visualization
+                visualize_robot(x, y, theta1, theta2, L1, L2)
+                print("-" * 60)
+                continue
+            
+            # Send angles to serial ports
+            send_angles(ser1, ser2, theta1, theta2)
+            
+            # Show visualization
+            visualize_robot(x, y, theta1, theta2, L1, L2)
+            
+        except Exception as e:
+            print(f"[FAIL] Error during serial transmission: {e}")
+            print(f"   Error type: {type(e).__name__}")
+            # Still show visualization even if serial fails
+            visualize_robot(x, y, theta1, theta2, L1, L2)
+        
+        print("-" * 60)
+
+except KeyboardInterrupt:
+    print("\nInterrupted by user.")
+
+finally:
+    # Close ports when exiting
+    print("\nClosing robot serial ports...")
+    try:
+        ser1.close()
+        ser2.close()
+        print("[OK] Robot serial ports closed")
+    except:
+        pass
+    print("Robot controller terminated.")
+\end{lstlisting}
+
+\section{Serial Sender Utility}
+
+This utility script is used for testing serial communication with the robot's microcontrollers.
+
+\begin{lstlisting}[language=Python, caption={Serial Sender Utility}, label={lst:serialSender}]
+import serial
+import time
+import sys
+
+# ===== SERIAL PORT CONFIGURATION =====
+# Change these values to match your actual serial ports
+PORT1 = 'COM11'   # First serial port
+PORT2 = 'COM10'  # Second serial port
+BAUD_RATE = 9600 # Communication speed
+TIMEOUT = 1      # Timeout in seconds
+# =====================================
+
+def test_serial_ports():
+    """
+    Test if the configured serial ports can be opened.
+    """
+    print("=== Testing Serial Ports ===")
+    
+    # Test PORT1
+    try:
+        ser1 = serial.Serial(PORT1, BAUD_RATE, timeout=1)
+        print(f"[OK] {PORT1} - OK (can open and close)")
+        ser1.close()
+    except serial.SerialException as e:
+        print(f"[FAIL] {PORT1} - FAILED: {e}")
+    
+    # Test PORT2
+    try:
+        ser2 = serial.Serial(PORT2, BAUD_RATE, timeout=1)
+        print(f"[OK] {PORT2} - OK (can open and close)")
+        ser2.close()
+    except serial.SerialException as e:
+        print(f"[FAIL] {PORT2} - FAILED: {e}")
+    
+    print()
+
+def send_integers_to_serial_ports(ser1, ser2):
+    """
+    Sends two integers to two different serial ports based on user input.
+    Ports should already be opened and passed as parameters.
+    """
+    
+    try:
+        # Get user input
+        print("=== Serial Port Integer Sender ===")
+        print(f"Configured ports: {PORT1} and {PORT2}")
+        print(f"Baud rate: {BAUD_RATE}")
+        print()
+        
+        # Get integers from user
+        try:
+            int1 = int(input("Enter first integer to send to " + PORT1 + ": "))
+            int2 = int(input("Enter second integer to send to " + PORT2 + ": "))
+        except ValueError:
+            print("Error: Please enter valid integers only!")
+            return
+        
+        # Send integers
+        print("\nSending data...")
+        
+        # Convert integers to bytes and send
+        data1 = str(int1).encode('utf-8') + b'\n'
+        data2 = str(int2).encode('utf-8') + b'\n'
+        
+        print(f"Data to send to {PORT1}: {data1} (raw bytes: {list(data1)})")
+        print(f"Data to send to {PORT2}: {data2} (raw bytes: {list(data2)})")
+        
+        # Send data and check how many bytes were written
+        bytes_sent1 = ser1.write(data1)
+        print(f"[OK] Sent {bytes_sent1} bytes ({int1}) to {PORT1}")
+        
+        bytes_sent2 = ser2.write(data2)
+        print(f"[OK] Sent {bytes_sent2} bytes ({int2}) to {PORT2}")
+        
+        # Flush the output buffers to ensure data is transmitted
+        ser1.flush()
+        ser2.flush()
+        print("[OK] Data flushed to both ports")
+        
+        # Wait a moment for data to be transmitted
+        time.sleep(0.5)
+        
+        # Check if there's any data waiting to be sent
+        out_waiting1 = ser1.out_waiting
+        out_waiting2 = ser2.out_waiting
+        print(f"Bytes still waiting to be sent - {PORT1}: {out_waiting1}, {PORT2}: {out_waiting2}")
+        
+        print("\n[OK] Data sent successfully")
+        
+    except Exception as e:
+        print(f"\nUnexpected error: {e}")
+
+def open_serial_ports():
+    """
+    Opens and returns both serial port connections.
+    """
+    print("Opening serial ports...")
+    
+    try:
+        ser1 = serial.Serial(PORT1, BAUD_RATE, timeout=TIMEOUT)
+        print(f"[OK] Connected to {PORT1}")
+    except serial.SerialException as e:
+        print(f"[FAIL] Failed to connect to {PORT1}: {e}")
+        return None, None
+    
+    try:
+        ser2 = serial.Serial(PORT2, BAUD_RATE, timeout=TIMEOUT)
+        print(f"[OK] Connected to {PORT2}")
+    except serial.SerialException as e:
+        print(f"[FAIL] Failed to connect to {PORT2}: {e}")
+        ser1.close()
+        return None, None
+    
+    # Wait for serial ports to initialize
+    time.sleep(2)
+    print("[OK] Serial ports ready\n")
+    
+    return ser1, ser2
+
+if __name__ == "__main__":
+    # Check if pyserial is available
+    try:
+        import serial
+    except ImportError:
+        print("Error: pyserial library is not installed!")
+        print("Install it using: pip install pyserial")
+        sys.exit(1)
+    
+    # Test serial ports first
+    test_serial_ports()
+    
+    # Open serial ports once
+    ser1, ser2 = open_serial_ports()
+    
+    if ser1 is None or ser2 is None:
+        print("Failed to open serial ports. Exiting.")
+        sys.exit(1)
+    
+    try:
+        # Run in a loop
+        print("Serial Port Integer Sender - Press Ctrl+C to exit\n")
+        
+        while True:
+            try:
+                send_integers_to_serial_ports(ser1, ser2)
+                print("\n" + "-"*50)
+                input("Press Enter to send more numbers or Ctrl+C to exit...")
+                print()
+            except KeyboardInterrupt:
+                break
+                
+    finally:
+        # Close ports when exiting
+        print("\n\nClosing serial ports...")
+        try:
+            ser1.close()
+            ser2.close()
+            print("[OK] Serial ports closed")
+        except:
+            pass
+        print("Exiting program. Goodbye!")
+\end{lstlisting}
+
+
+
+
+
+
+

@@ -1,2 +1,43 @@
 \chapter{Conclusion}
 
+This thesis presented the complete design, development, and validation of an autonomous robotic 
+manipulator tailored for the selective harvesting of green asparagus. The primary objective was 
+to bridge the gap between theoretical robotics and practical agricultural application by 
+creating a system capable of identifying, locating, and harvesting asparagus spears in a 
+simulated environment. The work encompassed the complete mechatronic design of a custom 
+2-degree-of-freedom (DOF) robotic arm, and a separate specialized cutting and gripping 
+end-effector. On the software front, a robust control architecture was established, 
+integrating high-level navigation logic written in Python with low-level firmware executing 
+on distributed microcontrollers. A sophisticated computer vision pipeline was developed, 
+utilizing a Mask R-CNN deep learning model for instance segmentation and a 3D point cloud 
+processing sequence for precise spatial localization. The integration of 2D visual data with 
+3D depth information, refined through a centroid-filtering technique, enabled the reliable 
+calculation of harvesting targets. Experimental validation demonstrated the system's 
+effectiveness, with the kinematic model verified through rigorous pose calibration and the 
+end-to-end harvesting cycle successfully executed. The system proved capable of autonomously 
+detecting target spears, planning collision-free trajectories, and performing the delicate 
+cut-and-hold operation required for asparagus harvesting.
+
+While the developed prototype successfully demonstrated the proof-of-concept for autonomous 
+harvesting, several limitations remain. The assessment of positioning accuracy and harvesting 
+success relied primarily on visual estimation due to the lack of external metrology equipment, 
+such as laser trackers, which prevented a quantitative analysis of sub-millimeter kinematic 
+errors. Furthermore, the experiments were conducted in a controlled laboratory setting with 
+consistent lighting conditions and stable target positioning. Consequently, the system has 
+not yet been stress-tested against the unpredictable variables found in an actual agricultural 
+field, such as variable sunlight, wind, or occlusions by foliage. Additionally, the system 
+currently operates from a fixed base, whereas in a real-world scenario, the manipulator must 
+be mounted on a mobile platform to traverse crop rows, introducing new challenges in dynamic 
+localization and vibration stabilization.
+
+To evolve this prototype into a field-ready agricultural product, future research should focus 
+on conducting extensive testing in real asparagus fields to evaluate the computer vision 
+system's robustness against varying lighting conditions and complex background clutter. 
+Essential to this evolution is the integration of the manipulator onto an autonomous ground 
+vehicle (rover) to enable continuous harvesting along crop rows, coordinating the arm's motion 
+with the vehicle's odometry. Further improvements could include implementing a closed-loop 
+visual servoing system to provide real-time feedback during the reaching phase, thereby 
+correcting for any target movement or calibration drift. Finally, optimizing the harvesting 
+cycle by executing vision processing and arm motion simultaneously would significantly reduce 
+the time per harvest, increasing the commercial viability of the system.
+

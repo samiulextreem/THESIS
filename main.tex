@@ -18,7 +18,22 @@
 % \usepackage[hang,flushmargin]{footmisc} % Disable indent in footnotes
 \usepackage{titlesec}
 \usepackage{amsmath} % Needed for commands like \tfrac
-\usepackage{minted} % Used for code
+\usepackage{xcolor}
+\usepackage{listings}
+\lstset{
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    keywordstyle=\color{blue},
+    commentstyle=\color{green!40!black},
+    stringstyle=\color{red},
+    showstringspaces=false,
+    inputencoding=utf8,
+    extendedchars=true,
+    literate={✓}{{$\checkmark$}}1 {🚀}{{$\rightarrow$}}1 {❌}{{X}}1 {📋}{{L}}1 {🔄}{{R}}1 {🎉}{{!}}1 {📁}{{F}}1
+}
 \usepackage{float}
 \usepackage[font=scriptsize, skip=5pt, justification=centering]{caption} % Caption/image space
 \usepackage[style=authoryear-ibid,backend=biber]{biblatex}
