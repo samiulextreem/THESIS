@@ -1,4 +1,4 @@
-\chapter{Computer vision}
+\chapter{Computer Vision}
 \section{Requirements of objective}
 Automated asparagus harvesting necessitates reliable perception to locate, assess, and safely manipulate spears within complex 
 field conditions. Computer vision provides the sensing and interpretation capabilities required to: (i) detect spears amidst 
@@ -28,7 +28,7 @@ To meet these requirements, this work uses camera-based sensing for both 2D appe
 approach integrates image acquisition, camera calibration, point-cloud generation, and segmentation to produce actionable 
 targets for manipulation.
 
-\section{Dataset collection and  model training}
+\section{Dataset Collection and Model Training}
 A web-sourced image corpus of 200 asparagus scenes was curated and annotated using the COCO methodology to enable instance-level learning. 
 Images were intentionally selected to span challenging, field-relevant variability, including cluttered arrangements and occlusions among 
 spears, out-of-focus and mild motion-blur cases, diverse viewpoints and backgrounds, and a broad range of illumination conditions (e.g., 
@@ -68,7 +68,7 @@ performance under varied backgrounds and illumination.}
 
 
 
-\section{camera setup in lab environment}
+\section{Camera Setup in Lab Environment}
  The laboratory configuration replicates typical field viewing geometry while providing controlled and repeatable imaging conditions. The camera is 
  rigidly mounted on an aluminum extrusion frame using a vibration-damped bracket, with the optical axis oriented obliquely toward the 
  crop bed at an incidence angle of approximately 25--35 degrees. The working distance is set such that a single frame covers the full 
@@ -122,7 +122,7 @@ The Orbbec Astra is another RGB-D camera used in the setup, providing reliable d
 The physical arrangement of the cameras, lighting, and sample placement is illustrated in the figures above, 
 demonstrating the controlled environment for data acquisition.
 
-\section{cloud point processing}
+\section{Point Cloud Processing}
 
 This section presents the point cloud generation and processing methodology employed to transform raw RGB-D data 
 from the Orbbec Astra camera into structured 3D representations suitable for asparagus spear detection and 

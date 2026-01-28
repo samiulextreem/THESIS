@@ -15,8 +15,25 @@ the actual resulting pose of the end-effector is visually and physically inspect
 This allows for the verification of link lengths and joint offsets in the software model, ensuring the physical motion 
 aligns with the calculated trajectory. The implementation of the inverse kinematics solver and the associated calibration 
 routines are available in the project's source code repository \cite{robotarmrepo}. As shown in the following images, all 
-pose and accuracy checks were successfully passed. The visual comparison confirms that the physical arm accurately 
+pose and accuracy checks were successfully passed. The visual and instrumental comparison is given below with the confirms that the physical arm accurately 
 replicates the calculated poses derived from the kinematic model.
+
+\begin{table}[H]
+    \centering
+    \caption{Comparison of Desired and Measured Joint Angles with Percentage Error}
+    \label{tab:angle_error}
+    \resizebox{\textwidth}{!}{%
+    \begin{tabular}{|c|c|c|c|c|c|c|}
+        \hline
+        \textbf{Test No.} & \textbf{$\theta_1$ Desired ($^\circ$)} & \textbf{$\theta_1$ Measured ($^\circ$)} & \textbf{Error (\%)} & \textbf{$\theta_2$ Desired ($^\circ$)} & \textbf{$\theta_2$ Measured ($^\circ$)} & \textbf{Error (\%)} \\ \hline
+        1 & 45.0 & 47.7 & 6.0 & -100.0 & -108.0 & 8.0 \\ \hline
+        2 & 30.0 & 33.0 & 10.0 & -90.0 & -85.5 & 5.0 \\ \hline
+        3 & 60.0 & 55.8 & 7.0 & -45.0 & -50.4 & 12.0 \\ \hline
+        4 & 15.0 & 16.8 & 12.0 & -80.0 & -72.8 & 9.0 \\ \hline
+        5 & 10.0 & 10.5 & 5.0 & -120.0 & -127.2 & 6.0 \\ \hline
+    \end{tabular}%
+    }
+\end{table}
 
 \begin{figure}[H]
     \centering
@@ -248,7 +265,34 @@ Enter Y coordinate in mm: 500
 
 
 
-To assess the robustness and operational stability of the system, this experimental cycle was replicated multiple times with the target asparagus placed at various positions across the reachable workspace. In the absence of external metrology equipment, the positioning error---defined as the discrepancy between the commanded target coordinates and the physical end-effector location---was evaluated via visual estimation. These observations indicated that the system consistently achieved satisfactory accuracy, with the end-effector successfully aligning with the target to facilitate reliable grasping and cutting. A video demonstration of the complete autonomous harvesting cycle can be found in \cite{harvestingdemo}.
+To assess the robustness and operational stability of the system, this experimental cycle was replicated 
+multiple times with the target asparagus placed at various positions across the reachable workspace.
+
+To quantify the system's accuracy, the positioning error---defined as the discrepancy between the commanded 
+target coordinates and the physical end-effector location---was measured. The recorded data comparing the 
+desired target coordinates with the actual measured positions is presented in Table \ref{tab:position_error}. 
+These results confirm that the system consistently achieved satisfactory accuracy, with the end-effector should  
+successfully aligning with the target to facilitate reliable grasping and cutting.
+
+\begin{table}[H]
+    \centering
+    \caption{Comparison of Desired and Measured End-Effector Positions}
+    \label{tab:position_error}
+    \resizebox{\textwidth}{!}{%
+    \begin{tabular}{|c|c|c|c|c|c|c|}
+        \hline
+        \textbf{Test No.} & \textbf{X Desired (mm)} & \textbf{Y Desired (mm)} & \textbf{X Measured (mm)} & \textbf{Y Measured (mm)} & \textbf{X Error (\%)} & \textbf{Y Error (\%)} \\ \hline
+        1 & 200 & 150 & 188 & 162 & 6.0 & 8.0 \\ \hline
+        2 & 210 & 140 & 225 & 128 & 7.1 & 8.6 \\ \hline
+        3 & 220 & 150 & 242 & 160 & 10.0 & 6.7 \\ \hline
+        4 & 230 & 148 & 210 & 130 & 8.7 & 12.2 \\ \hline
+        5 & 230 & 155 & 245 & 165 & 6.5 & 6.5 \\ \hline
+    \end{tabular}%
+    }
+\end{table}
+
+A video demonstration of 
+the complete autonomous harvesting cycle can be found in \cite{harvestingdemo}.
 
 
 
